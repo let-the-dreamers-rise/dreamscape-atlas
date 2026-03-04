@@ -185,9 +185,6 @@ const DreamAtlas = () => {
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-[10px] text-dream-dim">{dream.date}</span>
                       <span className="dream-tag text-[10px]">{dream.emotion}</span>
-                      {(dream as any).isUserDream && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">YOU</span>
-                      )}
                     </div>
                   </a>
                 ))}

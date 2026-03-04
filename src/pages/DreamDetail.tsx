@@ -48,9 +48,6 @@ const DreamDetail = () => {
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px] tracking-wider uppercase text-dream-dim">{dream.date}</span>
             <span className="dream-tag text-[10px]">{dream.emotion}</span>
-            {(dream as any).isUserDream && (
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">YOUR DREAM</span>
-            )}
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-display font-bold tracking-[-0.02em] text-foreground mb-8">{dream.title}</h1>

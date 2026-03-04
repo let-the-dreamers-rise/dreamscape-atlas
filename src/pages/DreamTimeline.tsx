@@ -56,9 +56,9 @@ const DreamTimeline = () => {
                   <div
                     className="absolute left-[12px] top-6 w-[15px] h-[15px] rounded-full border-2"
                     style={{
-                      borderColor: (dream as any).isUserDream ? "hsl(var(--dream-accent-cyan))" : "hsl(var(--primary))",
+                      borderColor: "hsl(var(--primary))",
                       background: "hsl(var(--background))",
-                      boxShadow: `0 0 10px ${(dream as any).isUserDream ? "hsl(var(--dream-accent-cyan) / 0.3)" : "hsl(var(--primary) / 0.3)"}`,
+                      boxShadow: "0 0 10px hsl(var(--primary) / 0.3)",
                     }}
                   />
 
@@ -73,9 +73,6 @@ const DreamTimeline = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] tracking-wider uppercase text-dream-dim">{dream.date}</span>
                           <span className="dream-tag text-[10px]">{dream.emotion}</span>
-                          {(dream as any).isUserDream && (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-dream-cyan/10 text-dream-cyan border border-dream-cyan/20 font-semibold">YOUR DREAM</span>
-                          )}
                         </div>
                       </div>
                     </div>
