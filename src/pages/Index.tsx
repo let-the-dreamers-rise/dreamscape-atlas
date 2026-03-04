@@ -37,7 +37,7 @@ const Dashboard = () => {
 
         {/* Hero content - positioned at bottom-left with proper spacing */}
         <motion.div
-          className="relative z-10 h-full flex flex-col justify-end pb-20 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto"
+          className="relative z-10 h-full flex flex-col justify-center pt-28 pb-16 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto"
           variants={container}
           initial="hidden"
           animate="show"
@@ -58,7 +58,7 @@ const Dashboard = () => {
 
           <motion.h1
             variants={fadeUp}
-            className="text-6xl sm:text-8xl lg:text-[9rem] font-display font-bold tracking-[-0.03em] leading-[0.85] mb-6 max-w-4xl"
+            className="text-5xl sm:text-7xl lg:text-[8rem] font-display font-bold tracking-[-0.03em] leading-[0.9] mb-6 max-w-4xl"
           >
             <span className="text-foreground block">The</span>
             <span className="dream-text-gradient block">Subconscious</span>
