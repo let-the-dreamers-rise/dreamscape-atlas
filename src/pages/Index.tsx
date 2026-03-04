@@ -65,8 +65,8 @@ const Dashboard = () => {
       <div className="relative h-[80vh] min-h-[600px] overflow-hidden">
         <div className="absolute inset-0">
           <img src={dreamHero} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/50 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-background/30" />
           <div className="absolute inset-0 dream-aurora opacity-60" />
         </div>
 
@@ -142,7 +142,7 @@ const Dashboard = () => {
           className="grid grid-cols-3 gap-4 sm:gap-6 mb-20"
         >
           {[
-            { label: "Dreams", value: String(totalDreams), sub: `recorded (${userDreams.length} yours)`, icon: Brain },
+            { label: "Dreams", value: String(totalDreams), sub: "recorded", icon: Brain },
             { label: "Symbols", value: String(totalSymbols), sub: "discovered", icon: Sparkles },
             { label: "Insights", value: String(insights.length), sub: "patterns found", icon: Zap },
           ].map((stat, i) => (
@@ -238,9 +238,6 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-[10px] tracking-wider uppercase text-dream-dim">{dream.date}</span>
                         <span className="dream-tag text-[10px]">{dream.emotion}</span>
-                        {(dream as any).isUserDream && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">YOU</span>
-                        )}
                       </div>
                       <p className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
                       <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{dream.description}</p>

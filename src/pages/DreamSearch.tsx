@@ -63,9 +63,6 @@ const DreamSearch = () => {
                   <div className="min-w-0 flex flex-col justify-center">
                     <div className="flex items-center gap-2">
                       <p className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
-                      {(dream as any).isUserDream && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold flex-shrink-0">YOU</span>
-                      )}
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{dream.description}</p>
                     <div className="flex gap-1.5 mt-2">
