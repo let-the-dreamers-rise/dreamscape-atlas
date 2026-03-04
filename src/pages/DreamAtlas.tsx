@@ -92,7 +92,7 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
 }
 
 const DreamAtlas = () => {
-  const { allDreams } = useDreams();
+  const { allDreams, loading } = useDreams();
   const allSymbols = useSymbols(allDreams);
   const { nodes: graphNodes, edges: graphEdges } = buildGraph(allSymbols, allDreams);
 
@@ -116,7 +116,7 @@ const DreamAtlas = () => {
     setSelected(node.id);
   }, []);
 
-  const isEmpty = allDreams.length === 0;
+  const isEmpty = !loading && allDreams.length === 0;
 
   return (
     <div className="h-[calc(100vh-4rem)] relative dream-noise">
