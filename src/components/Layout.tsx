@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, PenLine, Clock, Map, Search } from "lucide-react";
+import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut } from "lucide-react";
 import StarField from "./StarField";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: Brain },
@@ -13,6 +14,7 @@ const navItems = [
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -71,20 +73,45 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               })}
             </div>
 
-            {/* Mobile */}
-            <div className="flex md:hidden items-center gap-0.5 p-1 rounded-xl dream-glass">
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`p-2 rounded-lg transition-all ${isActive ? "text-primary bg-primary/10" : "text-muted-foreground"}`}
-                  >
-                    <item.icon className="w-4 h-4" />
-                  </Link>
-                );
-              })}
+            {/* Auth button */}
+            <div className="flex items-center gap-2">
+              {user ? (
+                <button
+                  onClick={signOut}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors dream-glass"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Sign Out</span>
+                </button>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium text-primary-foreground transition-colors"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--primary)), hsl(265 60% 50%))",
+                    boxShadow: "0 0 15px hsl(var(--primary) / 0.2)",
+                  }}
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </Link>
+              )}
+
+              {/* Mobile nav */}
+              <div className="flex md:hidden items-center gap-0.5 p-1 rounded-xl dream-glass">
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`p-2 rounded-lg transition-all ${isActive ? "text-primary bg-primary/10" : "text-muted-foreground"}`}
+                    >
+                      <item.icon className="w-4 h-4" />
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
