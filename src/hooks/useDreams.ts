@@ -93,20 +93,22 @@ export function useDreams() {
     return () => subscription.unsubscribe();
   }, [fetchUserDreams]);
 
-  // Only show mock/demo dreams when no user is logged in
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Show mock data for unauthenticated users and demo account; hide for regular signed-in users
+  const [showMockData, setShowMockData] = useState(true);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      setIsAuthenticated(!!user);
+      const isDemo = user?.email === "demo@dreamos.app";
+      setShowMockData(!user || isDemo);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session?.user);
+      const isDemo = session?.user?.email === "demo@dreamos.app";
+      setShowMockData(!session?.user || isDemo);
     });
     return () => subscription.unsubscribe();
   }, []);
 
-  const allDreams = isAuthenticated ? userDreams : [...userDreams, ...mockDreams];
+  const allDreams = showMockData ? [...userDreams, ...mockDreams] : userDreams;
 
   return { allDreams, userDreams, demoDreams: mockDreams, loading, refetch: fetchUserDreams };
 }
