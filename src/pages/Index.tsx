@@ -62,7 +62,7 @@ const Dashboard = () => {
   return (
     <div className="relative dream-noise">
       {/* HERO */}
-      <div className="relative h-[80vh] min-h-[600px] overflow-hidden">
+      <div className="relative h-[calc(100vh-4rem)] min-h-[640px] md:min-h-[700px] lg:min-h-[760px] overflow-hidden">
         <div className="absolute inset-0">
           <img src={dreamHero} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/50 to-background" />
@@ -75,7 +75,7 @@ const Dashboard = () => {
         <GlowOrb color="violet" size={350} className="bottom-20 left-1/3" delay={4} />
 
         <motion.div
-          className="relative z-10 h-full flex flex-col justify-center pt-28 pb-16 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto"
+          className="relative z-10 h-full flex flex-col justify-center pt-24 md:pt-28 pb-12 md:pb-16 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto"
           variants={container}
           initial="hidden"
           animate="show"
@@ -96,7 +96,7 @@ const Dashboard = () => {
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl sm:text-7xl lg:text-[8rem] font-display font-bold tracking-[-0.03em] leading-[0.9] mb-6 max-w-4xl"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.75rem] xl:text-[8rem] font-display font-bold tracking-[-0.03em] leading-[0.88] mb-5 md:mb-6 max-w-4xl"
           >
             <span className="text-foreground block">The</span>
             <span className="dream-text-gradient block">Subconscious</span>
