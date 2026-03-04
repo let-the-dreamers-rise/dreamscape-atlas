@@ -1,99 +1,216 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PenLine, Sparkles, Loader2 } from "lucide-react";
+import { PenLine, Sparkles, Loader2, Wand2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import GlowOrb from "@/components/GlowOrb";
 
 const DreamCapture = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stage, setStage] = useState<"idle" | "analyzing" | "imaging" | "saving">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
-      toast.error("Please fill in both the title and description.");
+      toast.error("Please fill in both fields.");
       return;
     }
+
     setIsSubmitting(true);
-    // Simulate AI analysis
-    await new Promise((r) => setTimeout(r, 2000));
-    setIsSubmitting(false);
-    toast.success("Dream recorded! AI analysis complete.");
-    navigate("/timeline");
+    setStage("analyzing");
+
+    try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Please sign in to record dreams.");
+        setIsSubmitting(false);
+        setStage("idle");
+        return;
+      }
+
+      // Call AI analysis edge function
+      const { data: analysis, error: fnError } = await supabase.functions.invoke("analyze-dream", {
+        body: { title, description },
+      });
+
+      if (fnError) throw fnError;
+
+      setStage("saving");
+
+      // Save dream to database
+      const { data: dream, error: dreamError } = await supabase
+        .from("dreams")
+        .insert({
+          user_id: user.id,
+          title,
+          description,
+          emotion: analysis?.emotion || null,
+          themes: analysis?.themes || [],
+          generated_image: analysis?.generated_image || null,
+        })
+        .select()
+        .single();
+
+      if (dreamError) throw dreamError;
+
+      // Save symbols
+      if (analysis?.symbols?.length) {
+        for (const symbolName of analysis.symbols) {
+          // Upsert symbol
+          const { data: existingSymbol } = await supabase
+            .from("symbols")
+            .select("id, frequency")
+            .eq("user_id", user.id)
+            .eq("name", symbolName)
+            .maybeSingle();
+
+          let symbolId: string;
+          if (existingSymbol) {
+            await supabase
+              .from("symbols")
+              .update({ frequency: existingSymbol.frequency + 1 })
+              .eq("id", existingSymbol.id);
+            symbolId = existingSymbol.id;
+          } else {
+            const { data: newSymbol } = await supabase
+              .from("symbols")
+              .insert({ user_id: user.id, name: symbolName, frequency: 1 })
+              .select()
+              .single();
+            symbolId = newSymbol!.id;
+          }
+
+          // Create relation
+          await supabase.from("dream_symbols").insert({
+            dream_id: dream.id,
+            symbol_id: symbolId,
+          });
+        }
+      }
+
+      toast.success("Dream recorded & analyzed!");
+      navigate(`/dream/${dream.id}`);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err?.message || "Failed to save dream.");
+    } finally {
+      setIsSubmitting(false);
+      setStage("idle");
+    }
+  };
+
+  const stageLabel = {
+    idle: "",
+    analyzing: "AI is decoding your dream...",
+    imaging: "Generating dream visualization...",
+    saving: "Saving to your atlas...",
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <PenLine className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-3xl font-display font-bold text-foreground">Record a Dream</h1>
-        </div>
-        <p className="text-muted-foreground mb-8 ml-[52px]">
-          Describe what you experienced. Our AI will extract symbols, emotions, and generate a visual reconstruction.
-        </p>
+    <div className="relative min-h-[calc(100vh-3.5rem)]">
+      <GlowOrb color="primary" size={500} className="-top-40 left-1/4" />
+      <GlowOrb color="cyan" size={300} className="bottom-20 right-10" delay={3} />
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Dream Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., The Glass City Above the Sea"
-              className="dream-input"
-            />
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+          {/* Header */}
+          <div className="mb-10">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(265 80% 65% / 0.2)", border: "1px solid hsl(265 80% 65% / 0.3)" }}>
+                <PenLine className="w-3 h-3 text-primary" />
+              </div>
+              <span className="text-xs font-medium tracking-[0.15em] uppercase text-primary">Dream Capture</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
+              What did you<br /><span className="dream-text-gradient">dream</span> last night?
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-md">
+              Describe everything you remember. Our AI will extract symbols, emotions, and generate a visual reconstruction of your dream.
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Dream Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe everything you remember... the places, feelings, people, colors, sounds..."
-              rows={8}
-              className="dream-input resize-none"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Dream Title</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="The Glass City Above the Sea..."
+                className="dream-input text-lg font-display"
+                maxLength={200}
+              />
+            </div>
 
-          <motion.button
-            type="submit"
-            disabled={isSubmitting}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground font-display font-semibold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors disabled:opacity-50 dream-glow"
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="I was floating above an endless purple ocean. In the distance, a city made entirely of glass was hovering above the waves, its towers catching light from a sun that seemed too close..."
+                rows={8}
+                className="dream-input resize-none leading-relaxed"
+                maxLength={5000}
+              />
+              <div className="flex justify-end mt-1">
+                <span className="text-[10px] text-dream-dim">{description.length}/5000</span>
+              </div>
+            </div>
+
+            <motion.button
+              type="submit"
+              disabled={isSubmitting}
+              whileHover={!isSubmitting ? { scale: 1.01 } : undefined}
+              whileTap={!isSubmitting ? { scale: 0.99 } : undefined}
+              className="w-full py-4 rounded-xl font-display font-semibold text-sm flex items-center justify-center gap-2.5 transition-all duration-300 disabled:opacity-50 relative overflow-hidden"
+              style={{
+                background: isSubmitting
+                  ? "hsl(240 18% 10%)"
+                  : "linear-gradient(135deg, hsl(265 80% 65%), hsl(265 60% 50%))",
+                color: "hsl(0 0% 100%)",
+                boxShadow: isSubmitting ? "none" : "0 0 40px hsl(265 80% 65% / 0.3)",
+              }}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {stageLabel[stage]}
+                </>
+              ) : (
+                <>
+                  <Wand2 className="w-4 h-4" />
+                  Record & Analyze Dream
+                </>
+              )}
+            </motion.button>
+          </form>
+
+          {/* Tip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-10 p-5 rounded-2xl"
+            style={{
+              background: "linear-gradient(135deg, hsl(240 18% 8% / 0.7), hsl(265 20% 10% / 0.4))",
+              border: "1px solid hsl(240 15% 15% / 0.5)",
+            }}
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Analyzing Dream...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5" />
-                Record & Analyze Dream
-              </>
-            )}
-          </motion.button>
-        </form>
-
-        {/* Example prompt */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="dream-card p-5 mt-8"
-        >
-          <p className="text-sm text-muted-foreground mb-2 font-medium">💡 Example</p>
-          <p className="text-sm text-foreground/80 italic">
-            "I was flying above a purple ocean and saw a floating glass city. The buildings shimmered with an inner light, and I could hear distant music echoing across the waves."
-          </p>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-dream-amber" />
+              <span className="text-xs font-display font-semibold text-foreground">Pro Tip</span>
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Include sensory details — colors, sounds, textures, emotions. The more vivid your description, the better the AI can reconstruct your dream world and identify meaningful patterns.
+            </p>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 };
