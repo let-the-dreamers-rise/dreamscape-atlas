@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Map, X, ArrowRight } from "lucide-react";
 import {
@@ -95,9 +95,16 @@ const DreamAtlas = () => {
   const allSymbols = useSymbols(allDreams);
   const { nodes: graphNodes, edges: graphEdges } = buildGraph(allSymbols, allDreams);
 
-  const [nodes, , onNodesChange] = useNodesState(graphNodes);
-  const [edges, , onEdgesChange] = useEdgesState(graphEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(graphNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(graphEdges);
   const [selected, setSelected] = useState<string | null>(null);
+
+  // Rebuild graph when dreams/symbols change
+  useEffect(() => {
+    const { nodes: newNodes, edges: newEdges } = buildGraph(allSymbols, allDreams);
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [allDreams.length, allSymbols.length, setNodes, setEdges]);
 
   const selectedSymbol = selected ? allSymbols.find((s) => s.id === selected) : null;
   const relatedDreams = selectedSymbol
