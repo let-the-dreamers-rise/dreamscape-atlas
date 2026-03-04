@@ -2,14 +2,15 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search as SearchIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { mockDreams } from "@/lib/dreamData";
+import { useDreams } from "@/hooks/useDreams";
 import GlowOrb from "@/components/GlowOrb";
 
 const DreamSearch = () => {
   const [query, setQuery] = useState("");
+  const { allDreams } = useDreams();
 
   const filtered = query.trim()
-    ? mockDreams.filter((d) => {
+    ? allDreams.filter((d) => {
         const q = query.toLowerCase();
         return (
           d.title.toLowerCase().includes(q) ||
@@ -34,7 +35,6 @@ const DreamSearch = () => {
             <p className="text-sm text-muted-foreground">Find dreams by keyword, symbol, emotion, or theme.</p>
           </div>
 
-          {/* Search */}
           <div className="relative mb-10">
             <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
@@ -55,23 +55,18 @@ const DreamSearch = () => {
 
           <AnimatePresence mode="popLayout">
             {filtered.map((dream) => (
-              <motion.div
-                key={dream.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                layout
-                className="mb-3"
-              >
-                <Link
-                  to={`/dream/${dream.id}`}
-                  className="group flex gap-4 p-4 rounded-2xl dream-card-hover"
-                >
+              <motion.div key={dream.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} layout className="mb-3">
+                <Link to={`/dream/${dream.id}`} className="group flex gap-4 p-4 rounded-2xl dream-card-hover">
                   <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                     <img src={dream.generated_image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
                   <div className="min-w-0 flex flex-col justify-center">
-                    <p className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
+                      {(dream as any).isUserDream && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold flex-shrink-0">YOU</span>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{dream.description}</p>
                     <div className="flex gap-1.5 mt-2">
                       {dream.symbols.slice(0, 3).map((s) => (
