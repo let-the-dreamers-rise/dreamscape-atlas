@@ -93,8 +93,20 @@ export function useDreams() {
     return () => subscription.unsubscribe();
   }, [fetchUserDreams]);
 
-  // Merge: user dreams first, then demo dreams
-  const allDreams = [...userDreams, ...mockDreams];
+  // Only show mock/demo dreams when no user is logged in
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsAuthenticated(!!user);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session?.user);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const allDreams = isAuthenticated ? userDreams : [...userDreams, ...mockDreams];
 
   return { allDreams, userDreams, demoDreams: mockDreams, loading, refetch: fetchUserDreams };
 }
