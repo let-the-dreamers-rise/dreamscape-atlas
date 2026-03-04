@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Sparkles, Heart, MapPin, Brain } from "lucide-react";
+import { ArrowLeft, Sparkles, Heart, Brain } from "lucide-react";
 import { mockDreams } from "@/lib/dreamData";
 import GlowOrb from "@/components/GlowOrb";
 
@@ -20,17 +20,18 @@ const DreamDetail = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative dream-noise">
       {/* Hero image */}
-      <div className="relative h-[50vh] min-h-[350px] overflow-hidden">
+      <div className="relative h-[55vh] min-h-[400px] overflow-hidden">
         <img src={dream.generated_image} alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/30" />
+        <div className="absolute inset-0 dream-aurora opacity-40" />
         <GlowOrb color="primary" size={300} className="bottom-0 left-1/4" />
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10 pb-16">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+      <div className="max-w-3xl mx-auto px-6 sm:px-10 -mt-36 relative z-10 pb-20">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
           <Link
             to="/timeline"
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6 group"
@@ -39,87 +40,71 @@ const DreamDetail = () => {
             Timeline
           </Link>
 
-          {/* Meta */}
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px] tracking-wider uppercase text-dream-dim">{dream.date}</span>
             <span className="dream-tag text-[10px]">{dream.emotion}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-6">
+          <h1 className="text-3xl sm:text-5xl font-display font-bold tracking-[-0.02em] text-foreground mb-8">
             {dream.title}
           </h1>
 
           {/* Description */}
-          <div
-            className="p-6 rounded-2xl mb-8"
-            style={{
-              background: "linear-gradient(135deg, hsl(240 18% 8% / 0.7), hsl(265 20% 10% / 0.4))",
-              border: "1px solid hsl(240 15% 15% / 0.5)",
-            }}
-          >
+          <div className="dream-glass-strong rounded-2xl p-7 mb-8 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent)" }} />
             <p className="text-foreground/85 leading-relaxed text-[15px]">{dream.description}</p>
           </div>
 
           {/* AI Analysis Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="p-5 rounded-2xl"
-              style={{
-                background: "hsl(240 18% 8% / 0.6)",
-                border: "1px solid hsl(265 80% 65% / 0.15)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
-                <span className="text-xs font-display font-semibold text-foreground">Symbols</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {dream.symbols.map((s) => (
-                  <span key={s} className="dream-tag-cyan text-[10px] px-2.5 py-1 rounded-full border">{s}</span>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="p-5 rounded-2xl"
-              style={{
-                background: "hsl(240 18% 8% / 0.6)",
-                border: "1px solid hsl(340 70% 65% / 0.15)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Heart className="w-3.5 h-3.5 text-dream-rose" />
-                <span className="text-xs font-display font-semibold text-foreground">Emotion</span>
-              </div>
-              <span className="dream-tag-rose text-xs px-3 py-1.5 rounded-full border">{dream.emotion}</span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="p-5 rounded-2xl"
-              style={{
-                background: "hsl(240 18% 8% / 0.6)",
-                border: "1px solid hsl(35 90% 60% / 0.15)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Brain className="w-3.5 h-3.5 text-dream-amber" />
-                <span className="text-xs font-display font-semibold text-foreground">Themes</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {dream.themes.map((t) => (
-                  <span key={t} className="dream-tag-amber text-[10px] px-2.5 py-1 rounded-full border">{t}</span>
-                ))}
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                icon: Sparkles,
+                label: "Symbols",
+                color: "primary",
+                items: dream.symbols,
+                tagClass: "dream-tag-cyan",
+                delay: 0.2,
+              },
+              {
+                icon: Heart,
+                label: "Emotion",
+                color: "dream-accent-rose",
+                items: [dream.emotion],
+                tagClass: "dream-tag-rose",
+                delay: 0.3,
+              },
+              {
+                icon: Brain,
+                label: "Themes",
+                color: "dream-accent-amber",
+                items: dream.themes,
+                tagClass: "dream-tag-amber",
+                delay: 0.4,
+              },
+            ].map((card) => (
+              <motion.div
+                key={card.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: card.delay }}
+                className="dream-glass-strong rounded-2xl p-5 relative overflow-hidden"
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-px"
+                  style={{ background: `linear-gradient(90deg, transparent, hsl(var(--${card.color}) / 0.3), transparent)` }}
+                />
+                <div className="flex items-center gap-2 mb-3">
+                  <card.icon className={`w-3.5 h-3.5 text-${card.color === "primary" ? "primary" : card.color.includes("rose") ? "dream-rose" : "dream-amber"}`} />
+                  <span className="text-xs font-display font-bold text-foreground">{card.label}</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {card.items.map((item) => (
+                    <span key={item} className={`${card.tagClass} text-[10px] px-2.5 py-1 rounded-full border`}>{item}</span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
       </div>

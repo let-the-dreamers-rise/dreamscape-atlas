@@ -22,20 +22,20 @@ const DreamSearch = () => {
     : [];
 
   return (
-    <div className="relative min-h-[calc(100vh-3.5rem)]">
+    <div className="relative min-h-[calc(100vh-4rem)] dream-noise">
       <GlowOrb color="primary" size={400} className="-top-20 right-20" />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <div className="text-center mb-10">
-            <h1 className="text-4xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
+      <div className="max-w-2xl mx-auto px-6 sm:px-10 py-20 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-6xl font-display font-bold tracking-[-0.02em] text-foreground mb-4 leading-[0.95]">
               Search your <span className="dream-text-gradient">dreams</span>
             </h1>
             <p className="text-sm text-muted-foreground">Find dreams by keyword, symbol, emotion, or theme.</p>
           </div>
 
           {/* Search */}
-          <div className="relative mb-8">
+          <div className="relative mb-10">
             <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
@@ -48,8 +48,8 @@ const DreamSearch = () => {
           </div>
 
           {query.trim() && (
-            <p className="text-xs text-muted-foreground mb-4">
-              {filtered.length} result{filtered.length !== 1 ? "s" : ""} for <span className="text-foreground">"{query}"</span>
+            <p className="text-xs text-muted-foreground mb-5">
+              {filtered.length} result{filtered.length !== 1 ? "s" : ""} for <span className="text-foreground font-medium">"{query}"</span>
             </p>
           )}
 
@@ -65,17 +65,13 @@ const DreamSearch = () => {
               >
                 <Link
                   to={`/dream/${dream.id}`}
-                  className="group flex gap-4 p-4 rounded-2xl transition-all duration-500 hover:translate-y-[-1px]"
-                  style={{
-                    background: "hsl(240 18% 8% / 0.5)",
-                    border: "1px solid hsl(240 15% 15% / 0.5)",
-                  }}
+                  className="group flex gap-4 p-4 rounded-2xl dream-card-hover"
                 >
-                  <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
                     <img src={dream.generated_image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-display font-semibold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
+                  <div className="min-w-0 flex flex-col justify-center">
+                    <p className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">{dream.title}</p>
                     <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{dream.description}</p>
                     <div className="flex gap-1.5 mt-2">
                       {dream.symbols.slice(0, 3).map((s) => (
@@ -89,9 +85,16 @@ const DreamSearch = () => {
           </AnimatePresence>
 
           {!query.trim() && (
-            <div className="text-center py-20">
-              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "hsl(265 80% 65% / 0.1)", border: "1px solid hsl(265 80% 65% / 0.2)" }}>
-                <SearchIcon className="w-6 h-6 text-primary/50" />
+            <div className="text-center py-24">
+              <div
+                className="w-20 h-20 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--dream-accent-cyan) / 0.05))",
+                  border: "1px solid hsl(var(--primary) / 0.15)",
+                  boxShadow: "0 0 30px hsl(var(--primary) / 0.08)",
+                }}
+              >
+                <SearchIcon className="w-7 h-7 text-primary/40" />
               </div>
               <p className="text-sm text-muted-foreground">Start typing to search your dream journal.</p>
             </div>
