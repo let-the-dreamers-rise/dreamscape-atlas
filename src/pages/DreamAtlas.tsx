@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Map, X, ArrowRight } from "lucide-react";
+import { Map, X, ArrowRight, PenLine } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   ReactFlow,
   Background,
@@ -115,6 +116,8 @@ const DreamAtlas = () => {
     setSelected(node.id);
   }, []);
 
+  const isEmpty = allDreams.length === 0;
+
   return (
     <div className="h-[calc(100vh-4rem)] relative dream-noise">
       <GlowOrb color="primary" size={400} className="-top-40 left-1/4" />
@@ -142,18 +145,50 @@ const DreamAtlas = () => {
         </motion.div>
       </div>
 
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
-        fitView
-        proOptions={{ hideAttribution: true }}
-        className="!bg-transparent"
-      >
-        <Background variant={BackgroundVariant.Dots} gap={40} size={0.8} color="rgba(168,139,250,0.05)" />
-      </ReactFlow>
+      {isEmpty ? (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-sm px-6"
+          >
+            <div
+              className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
+              style={{
+                background: "hsl(var(--primary) / 0.1)",
+                border: "1px solid hsl(var(--primary) / 0.2)",
+              }}
+            >
+              <Map className="w-7 h-7 text-primary opacity-60" />
+            </div>
+            <h2 className="font-display text-xl font-bold text-foreground mb-2">Your atlas is empty</h2>
+            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+              Record your first dream to start building your neural map. Each dream adds symbols and connections.
+            </p>
+            <Link
+              to="/capture"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-sm text-primary-foreground transition-all duration-300 dream-glow-strong"
+              style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(280 70% 50%))" }}
+            >
+              <PenLine className="w-4 h-4" />
+              Record a Dream
+            </Link>
+          </motion.div>
+        </div>
+      ) : (
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onNodeClick={onNodeClick}
+          fitView
+          proOptions={{ hideAttribution: true }}
+          className="!bg-transparent"
+        >
+          <Background variant={BackgroundVariant.Dots} gap={40} size={0.8} color="rgba(168,139,250,0.05)" />
+        </ReactFlow>
+      )}
 
       <AnimatePresence>
         {selectedSymbol && (
