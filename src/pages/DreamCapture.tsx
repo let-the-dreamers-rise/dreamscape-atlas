@@ -24,7 +24,6 @@ const DreamCapture = () => {
     setStage("analyzing");
 
     try {
-      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Please sign in to record dreams.");
@@ -33,7 +32,6 @@ const DreamCapture = () => {
         return;
       }
 
-      // Call AI analysis edge function
       const { data: analysis, error: fnError } = await supabase.functions.invoke("analyze-dream", {
         body: { title, description },
       });
@@ -42,7 +40,6 @@ const DreamCapture = () => {
 
       setStage("saving");
 
-      // Save dream to database
       const { data: dream, error: dreamError } = await supabase
         .from("dreams")
         .insert({
@@ -58,10 +55,8 @@ const DreamCapture = () => {
 
       if (dreamError) throw dreamError;
 
-      // Save symbols
       if (analysis?.symbols?.length) {
         for (const symbolName of analysis.symbols) {
-          // Upsert symbol
           const { data: existingSymbol } = await supabase
             .from("symbols")
             .select("id, frequency")
@@ -85,7 +80,6 @@ const DreamCapture = () => {
             symbolId = newSymbol!.id;
           }
 
-          // Create relation
           await supabase.from("dream_symbols").insert({
             dream_id: dream.id,
             symbol_id: symbolId,
@@ -112,31 +106,38 @@ const DreamCapture = () => {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-3.5rem)]">
+    <div className="relative min-h-[calc(100vh-4rem)] dream-noise">
       <GlowOrb color="primary" size={500} className="-top-40 left-1/4" />
       <GlowOrb color="cyan" size={300} className="bottom-20 right-10" delay={3} />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+      <div className="max-w-2xl mx-auto px-6 sm:px-10 py-20 relative z-10">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
           {/* Header */}
-          <div className="mb-10">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(265 80% 65% / 0.2)", border: "1px solid hsl(265 80% 65% / 0.3)" }}>
-                <PenLine className="w-3 h-3 text-primary" />
+          <div className="mb-12">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div
+                className="w-7 h-7 rounded-lg flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--primary) / 0.25), hsl(var(--dream-accent-violet) / 0.15))",
+                  border: "1px solid hsl(var(--primary) / 0.4)",
+                  boxShadow: "0 0 20px hsl(var(--primary) / 0.15)",
+                }}
+              >
+                <PenLine className="w-3.5 h-3.5 text-primary" />
               </div>
-              <span className="text-xs font-medium tracking-[0.15em] uppercase text-primary">Dream Capture</span>
+              <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-primary/80">Dream Capture</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-display font-bold tracking-tight text-foreground mb-3">
+            <h1 className="text-4xl sm:text-6xl font-display font-bold tracking-[-0.02em] text-foreground mb-4 leading-[0.95]">
               What did you<br /><span className="dream-text-gradient">dream</span> last night?
             </h1>
-            <p className="text-sm text-muted-foreground max-w-md">
-              Describe everything you remember. Our AI will extract symbols, emotions, and generate a visual reconstruction of your dream.
+            <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+              Describe everything you remember. Our AI will extract symbols, emotions, and generate a visual reconstruction.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Dream Title</label>
+              <label className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.15em] mb-2.5">Dream Title</label>
               <input
                 type="text"
                 value={title}
@@ -148,17 +149,17 @@ const DreamCapture = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Description</label>
+              <label className="block text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.15em] mb-2.5">Description</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="I was floating above an endless purple ocean. In the distance, a city made entirely of glass was hovering above the waves, its towers catching light from a sun that seemed too close..."
+                placeholder="I was floating above an endless purple ocean. In the distance, a city made entirely of glass was hovering above the waves..."
                 rows={8}
                 className="dream-input resize-none leading-relaxed"
                 maxLength={5000}
               />
-              <div className="flex justify-end mt-1">
-                <span className="text-[10px] text-dream-dim">{description.length}/5000</span>
+              <div className="flex justify-end mt-1.5">
+                <span className="text-[10px] text-dream-dim font-mono">{description.length}/5000</span>
               </div>
             </div>
 
@@ -167,13 +168,12 @@ const DreamCapture = () => {
               disabled={isSubmitting}
               whileHover={!isSubmitting ? { scale: 1.01 } : undefined}
               whileTap={!isSubmitting ? { scale: 0.99 } : undefined}
-              className="w-full py-4 rounded-xl font-display font-semibold text-sm flex items-center justify-center gap-2.5 transition-all duration-300 disabled:opacity-50 relative overflow-hidden"
+              className="w-full py-4 rounded-xl font-display font-bold text-sm flex items-center justify-center gap-2.5 transition-all duration-300 disabled:opacity-50 relative overflow-hidden text-primary-foreground"
               style={{
                 background: isSubmitting
-                  ? "hsl(240 18% 10%)"
-                  : "linear-gradient(135deg, hsl(265 80% 65%), hsl(265 60% 50%))",
-                color: "hsl(0 0% 100%)",
-                boxShadow: isSubmitting ? "none" : "0 0 40px hsl(265 80% 65% / 0.3)",
+                  ? "hsl(var(--muted))"
+                  : "linear-gradient(135deg, hsl(var(--primary)), hsl(265 60% 50%))",
+                boxShadow: isSubmitting ? "none" : "0 0 40px hsl(var(--primary) / 0.3), 0 10px 30px hsl(var(--primary) / 0.15)",
               }}
             >
               {isSubmitting ? (
@@ -195,15 +195,12 @@ const DreamCapture = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-10 p-5 rounded-2xl"
-            style={{
-              background: "linear-gradient(135deg, hsl(240 18% 8% / 0.7), hsl(265 20% 10% / 0.4))",
-              border: "1px solid hsl(240 15% 15% / 0.5)",
-            }}
+            className="mt-12 p-6 rounded-2xl dream-glass-strong relative overflow-hidden"
           >
-            <div className="flex items-center gap-2 mb-2">
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--dream-accent-amber) / 0.4), transparent)" }} />
+            <div className="flex items-center gap-2 mb-2.5">
               <Sparkles className="w-3.5 h-3.5 text-dream-amber" />
-              <span className="text-xs font-display font-semibold text-foreground">Pro Tip</span>
+              <span className="text-xs font-display font-bold text-foreground">Pro Tip</span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Include sensory details — colors, sounds, textures, emotions. The more vivid your description, the better the AI can reconstruct your dream world and identify meaningful patterns.
