@@ -1,15 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Zap, ArrowRight, Layers } from "lucide-react";
+import { Brain, Zap, ArrowRight, Layers, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDreams, useSymbols } from "@/hooks/useDreams";
+import { useConsent } from "@/hooks/useConsent";
 import { computeMemoryClusters, getConsolidationStage } from "@/lib/memoryConsolidation";
 import GlowOrb from "@/components/GlowOrb";
 
 const MemoryClusters = () => {
   const { allDreams, loading } = useDreams();
-  const clusters = computeMemoryClusters(allDreams);
+  const { consent } = useConsent();
+  const clusters = consent.clusterFormation ? computeMemoryClusters(allDreams) : [];
 
   const isEmpty = !loading && clusters.length === 0;
+  const consentBlocked = !consent.clusterFormation;
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] dream-noise">
