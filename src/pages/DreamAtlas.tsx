@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Map, X, ArrowRight, PenLine } from "lucide-react";
+import { Map, X, ArrowRight, PenLine, Brain, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   ReactFlow,
@@ -14,6 +14,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useDreams, useSymbols } from "@/hooks/useDreams";
 import { Dream, Symbol as DreamSymbol } from "@/lib/types";
+import { computeMemoryClusters, getConsolidationStage } from "@/lib/memoryConsolidation";
 import GlowOrb from "@/components/GlowOrb";
 
 const colorPalette = [
@@ -29,6 +30,8 @@ function getColor(name: string): string {
 }
 
 function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
+  const clusters = computeMemoryClusters(dreams);
+  
   // Position symbols in a radial layout
   const nodes: Node[] = symbols.map((s, i) => {
     const angle = (2 * Math.PI * i) / symbols.length;
@@ -36,8 +39,9 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
     const color = getColor(s.name);
     return {
       id: s.id,
+      type: "default",
       position: { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius },
-      data: { label: s.name },
+      data: { label: s.name, nodeType: "symbol" },
       style: {
         background: `${color}18`,
         border: `1.5px solid ${color}55`,
@@ -58,11 +62,49 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
     };
   });
 
+  // Add cluster nodes as larger "hub" nodes
+  const symbolNameToId: Record<string, string> = {};
+  symbols.forEach((s) => { symbolNameToId[s.name] = s.id; });
+
+  clusters.forEach((cluster, ci) => {
+    const clusterSymIds = cluster.symbols.map((s) => symbolNameToId[s]).filter(Boolean);
+    if (clusterSymIds.length === 0) return;
+
+    // Position cluster at centroid of its symbols
+    const memberNodes = nodes.filter((n) => clusterSymIds.includes(n.id));
+    const cx = memberNodes.reduce((sum, n) => sum + n.position.x, 0) / memberNodes.length;
+    const cy = memberNodes.reduce((sum, n) => sum + n.position.y, 0) / memberNodes.length;
+    const size = 60 + cluster.strength * 40;
+
+    nodes.push({
+      id: `cluster-${ci}`,
+      type: "default",
+      position: { x: cx, y: cy },
+      data: { label: `⬡ ${cluster.name}`, nodeType: "cluster", cluster },
+      style: {
+        background: `${cluster.color}12`,
+        border: `2px solid ${cluster.color}40`,
+        borderRadius: "16px",
+        width: size,
+        height: size,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "9px",
+        fontWeight: 800,
+        fontFamily: '"Space Grotesk", sans-serif',
+        color: cluster.color,
+        boxShadow: `0 0 50px ${cluster.color}20, 0 0 100px ${cluster.color}08`,
+        cursor: "pointer",
+        backdropFilter: "blur(12px)",
+        zIndex: 10,
+      },
+    });
+  });
+
   // Build edges from co-occurrence
   const edgeSet = new Set<string>();
   const edges: Edge[] = [];
-  const symbolNameToId: Record<string, string> = {};
-  symbols.forEach((s) => { symbolNameToId[s.name] = s.id; });
 
   for (const dream of dreams) {
     const syms = dream.symbols;
@@ -88,31 +130,56 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
     }
   }
 
+  // Add cluster-to-symbol edges
+  clusters.forEach((cluster, ci) => {
+    cluster.symbols.forEach((symName) => {
+      const symId = symbolNameToId[symName];
+      if (symId) {
+        edges.push({
+          id: `cluster-${ci}-${symId}`,
+          source: `cluster-${ci}`,
+          target: symId,
+          style: { stroke: `${cluster.color}35`, strokeWidth: 2, strokeDasharray: "5 5" },
+          animated: true,
+        });
+      }
+    });
+  });
+
   return { nodes, edges };
 }
 
 const DreamAtlas = () => {
   const { allDreams, loading } = useDreams();
   const allSymbols = useSymbols(allDreams);
+  const clusters = computeMemoryClusters(allDreams);
   const { nodes: graphNodes, edges: graphEdges } = buildGraph(allSymbols, allDreams);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(graphNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(graphEdges);
   const [selected, setSelected] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<"symbol" | "cluster">("symbol");
 
-  // Rebuild graph when dreams/symbols change
   useEffect(() => {
     const { nodes: newNodes, edges: newEdges } = buildGraph(allSymbols, allDreams);
     setNodes(newNodes);
     setEdges(newEdges);
   }, [allDreams.length, allSymbols.length, setNodes, setEdges]);
 
-  const selectedSymbol = selected ? allSymbols.find((s) => s.id === selected) : null;
+  const selectedSymbol = selectedType === "symbol" && selected ? allSymbols.find((s) => s.id === selected) : null;
+  const selectedCluster = selectedType === "cluster" && selected ? clusters.find((_, i) => `cluster-${i}` === selected) : null;
   const relatedDreams = selectedSymbol
     ? allDreams.filter((d) => d.symbols.includes(selectedSymbol.name))
+    : selectedCluster
+    ? allDreams.filter((d) => selectedCluster.dreamIds.includes(d.id))
     : [];
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+    if (node.id.startsWith("cluster-")) {
+      setSelectedType("cluster");
+    } else {
+      setSelectedType("symbol");
+    }
     setSelected(node.id);
   }, []);
 
@@ -140,24 +207,17 @@ const DreamAtlas = () => {
           </div>
           <h1 className="text-2xl font-display font-bold text-foreground">Subconscious Atlas</h1>
           <p className="text-[11px] text-muted-foreground mt-1">
-            {allSymbols.length} symbols • {allDreams.length} dreams mapped
+            {allSymbols.length} symbols • {clusters.length} memory clusters • {allDreams.length} dreams
           </p>
         </motion.div>
       </div>
 
       {isEmpty ? (
         <div className="absolute inset-0 flex items-center justify-center z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-sm px-6"
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center max-w-sm px-6">
             <div
               className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-              style={{
-                background: "hsl(var(--primary) / 0.1)",
-                border: "1px solid hsl(var(--primary) / 0.2)",
-              }}
+              style={{ background: "hsl(var(--primary) / 0.1)", border: "1px solid hsl(var(--primary) / 0.2)" }}
             >
               <Map className="w-7 h-7 text-primary opacity-60" />
             </div>
@@ -191,7 +251,7 @@ const DreamAtlas = () => {
       )}
 
       <AnimatePresence>
-        {selectedSymbol && (
+        {(selectedSymbol || selectedCluster) && (
           <motion.div
             initial={{ x: 350, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -202,19 +262,60 @@ const DreamAtlas = () => {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <span className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-semibold">Symbol</span>
-                  <h2 className="font-display text-xl font-bold text-foreground">{selectedSymbol.name}</h2>
+                  <span className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-semibold">
+                    {selectedCluster ? "Memory Cluster" : "Symbol"}
+                  </span>
+                  <h2 className="font-display text-xl font-bold text-foreground">
+                    {selectedCluster?.name || selectedSymbol?.name}
+                  </h2>
                 </div>
                 <button onClick={() => setSelected(null)} className="p-2 rounded-lg dream-glass hover:bg-muted transition-colors">
                   <X className="w-3.5 h-3.5 text-muted-foreground" />
                 </button>
               </div>
 
-              <div className="dream-glass-strong rounded-xl p-5 mb-6 relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent)" }} />
-                <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-semibold mb-1">Appearances</p>
-                <p className="text-4xl font-display font-bold dream-text-gradient">{selectedSymbol.frequency}</p>
-              </div>
+              {selectedCluster && (
+                <>
+                  <div className="dream-glass-strong rounded-xl p-5 mb-4 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${selectedCluster.color}40, transparent)` }} />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-semibold mb-1">Consolidation</p>
+                        <p className="text-3xl font-display font-bold" style={{ color: selectedCluster.color }}>
+                          {Math.round(selectedCluster.strength * 100)}%
+                        </p>
+                      </div>
+                      <Brain className="w-8 h-8 neural-pulse" style={{ color: selectedCluster.color }} />
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-2">
+                      {getConsolidationStage(selectedCluster.strength).description}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {selectedCluster.symbols.map((sym) => (
+                      <span
+                        key={sym}
+                        className="px-2.5 py-1 text-[10px] font-medium rounded-full"
+                        style={{
+                          background: `${selectedCluster.color}10`,
+                          border: `1px solid ${selectedCluster.color}25`,
+                          color: selectedCluster.color,
+                        }}
+                      >
+                        {sym}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {selectedSymbol && (
+                <div className="dream-glass-strong rounded-xl p-5 mb-6 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent)" }} />
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-[0.15em] font-semibold mb-1">Appearances</p>
+                  <p className="text-4xl font-display font-bold dream-text-gradient">{selectedSymbol.frequency}</p>
+                </div>
+              )}
 
               <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-3">Related Dreams</h3>
               <div className="space-y-2">
