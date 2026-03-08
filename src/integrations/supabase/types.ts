@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      data_consent_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          scope: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          scope: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          scope?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       dream_symbols: {
         Row: {
           dream_id: string
@@ -81,6 +108,42 @@ export type Database = {
           id?: string
           themes?: string[] | null
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      memory_clusters: {
+        Row: {
+          created_at: string
+          description: string | null
+          dream_ids: string[]
+          id: string
+          name: string
+          strength: number
+          symbols: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          dream_ids?: string[]
+          id?: string
+          name: string
+          strength?: number
+          symbols?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          dream_ids?: string[]
+          id?: string
+          name?: string
+          strength?: number
+          symbols?: string[]
           updated_at?: string
           user_id?: string
         }
