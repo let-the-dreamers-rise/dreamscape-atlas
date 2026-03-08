@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      collective_patterns: {
+        Row: {
+          emotion_associations: Json | null
+          global_frequency: number
+          id: string
+          symbol_name: string
+          updated_at: string
+        }
+        Insert: {
+          emotion_associations?: Json | null
+          global_frequency?: number
+          id?: string
+          symbol_name: string
+          updated_at?: string
+        }
+        Update: {
+          emotion_associations?: Json | null
+          global_frequency?: number
+          id?: string
+          symbol_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       data_consent_log: {
         Row: {
           action: string
@@ -169,6 +193,36 @@ export type Database = {
           frequency?: number
           id?: string
           name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_consent: {
+        Row: {
+          ai_analysis: boolean
+          cluster_formation: boolean
+          id: string
+          image_generation: boolean
+          pattern_detection: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_analysis?: boolean
+          cluster_formation?: boolean
+          id?: string
+          image_generation?: boolean
+          pattern_detection?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_analysis?: boolean
+          cluster_formation?: boolean
+          id?: string
+          image_generation?: boolean
+          pattern_detection?: boolean
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
