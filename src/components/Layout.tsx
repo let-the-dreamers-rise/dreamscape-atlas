@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut, Layers, Shield } from "lucide-react";
+import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut, Layers, Shield, Users, Sparkles } from "lucide-react";
 import StarField from "./StarField";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -10,6 +10,7 @@ const navItems = [
   { path: "/timeline", label: "Timeline", icon: Clock },
   { path: "/atlas", label: "Atlas", icon: Map },
   { path: "/clusters", label: "Memory", icon: Layers },
+  { path: "/collective", label: "Collective", icon: Users },
   { path: "/sovereignty", label: "Sovereignty", icon: Shield },
   { path: "/search", label: "Search", icon: Search },
 ];
@@ -52,7 +53,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="relative px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-300"
+                    className="relative px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-300"
                   >
                     {isActive && (
                       <motion.div
@@ -75,8 +76,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               })}
             </div>
 
-            {/* Auth button */}
+            {/* Auth + Pitch */}
             <div className="flex items-center gap-2">
+              <Link
+                to="/landing"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-dream-amber transition-colors"
+                style={{
+                  background: "hsl(var(--dream-accent-amber) / 0.1)",
+                  border: "1px solid hsl(var(--dream-accent-amber) / 0.25)",
+                }}
+              >
+                <Sparkles className="w-3 h-3" />
+                Pitch
+              </Link>
+
               {user ? (
                 <button
                   onClick={signOut}
@@ -101,7 +114,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Mobile nav */}
               <div className="flex md:hidden items-center gap-0.5 p-1 rounded-xl dream-glass">
-                {navItems.map((item) => {
+                {navItems.slice(0, 6).map((item) => {
                   const isActive = location.pathname === item.path;
                   return (
                     <Link

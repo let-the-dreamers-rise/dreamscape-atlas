@@ -15,6 +15,12 @@ export const mockSymbols: Symbol[] = [
   { id: "s12", name: "Stars", frequency: 8 },
 ];
 
+// IMPORTANT: Mock dreams deliberately share symbols across multiple dreams
+// so the hippocampal consolidation engine forms memory clusters.
+// Cluster 1: Flying + Ocean + Light (d1, d4, d7) → "Exploration Memory"
+// Cluster 2: Forest + Door + Light (d2, d6, d8) → "Transformation Memory"
+// Cluster 3: Stars + Mirror + Running (d3, d7, d9) → "Ascension Memory"
+// Cluster 4: City + Ocean + Door (d1, d6, d10) → "Dissolution Memory"
 export const mockDreams: Dream[] = [
   {
     id: "d1",
@@ -29,7 +35,7 @@ export const mockDreams: Dream[] = [
   {
     id: "d2",
     title: "The Endless Forest Path",
-    description: "Walking through an ancient forest where the trees whispered secrets. Each tree had a door carved into its trunk, and behind each door was a different memory from my childhood. The deeper I went, the younger the memories became.",
+    description: "Walking through an ancient forest where the trees whispered secrets. Each tree had a door carved into its trunk, and behind each door was a different memory from my childhood. The deeper I went, the younger the memories became. A soft golden light filtered through the canopy.",
     date: "2026-03-01",
     generated_image: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80",
     emotion: "Nostalgia",
@@ -39,7 +45,7 @@ export const mockDreams: Dream[] = [
   {
     id: "d3",
     title: "Running Through Starlight",
-    description: "I was running across a vast plain where the ground was made of mirrors reflecting the night sky. Every step created ripples of starlight. I was chasing something I couldn't see but deeply needed to find.",
+    description: "I was running across a vast plain where the ground was made of mirrors reflecting the night sky. Every step created ripples of starlight. I was chasing something I couldn't see but deeply needed to find. The stars above seemed to pulse in rhythm with my heartbeat.",
     date: "2026-02-27",
     generated_image: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80",
     emotion: "Urgency",
@@ -49,17 +55,17 @@ export const mockDreams: Dream[] = [
   {
     id: "d4",
     title: "The Mountain That Sang",
-    description: "A mountain rose from the ocean, and as waves crashed against it, the stone produced deep harmonic sounds. I climbed it barefoot, each ledge playing a different note. At the summit, I could see the curvature of the Earth.",
+    description: "A mountain rose from the ocean, and as waves crashed against it, the stone produced deep harmonic sounds. I was flying around it, each ledge playing a different note. The light from below made the water glow emerald. At the summit, I could see the curvature of the Earth.",
     date: "2026-02-24",
     generated_image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     emotion: "Awe",
-    symbols: ["Mountain", "Ocean", "Light"],
+    symbols: ["Mountain", "Ocean", "Flying", "Light"],
     themes: ["Achievement", "Perspective", "Harmony"],
   },
   {
     id: "d5",
     title: "Rain in the Classroom",
-    description: "I was back in school but it was raining inside the classroom. Each raindrop contained a tiny scene from the future. My old teacher pointed at the rain and said 'these are all the lives you could live.'",
+    description: "I was back in school but it was raining inside the classroom. Each raindrop contained a tiny scene from the future. My old teacher pointed at the rain and said 'these are all the lives you could live.' The school bell rang and everything dissolved into mist.",
     date: "2026-02-20",
     generated_image: "https://images.unsplash.com/photo-1428592953211-077101b2021b?w=800&q=80",
     emotion: "Melancholy",
@@ -69,11 +75,51 @@ export const mockDreams: Dream[] = [
   {
     id: "d6",
     title: "The City of Doors",
-    description: "An infinite city where every wall was a door. Opening one would close another somewhere else. I spent what felt like years navigating the labyrinth, searching for the one door that led outside. When I found it, it opened onto a calm ocean at dawn.",
+    description: "An infinite city where every wall was a door. Opening one would close another somewhere else. I spent what felt like years navigating the labyrinth, searching for the one door that led outside. When I found it, it opened onto a calm ocean at dawn. The forest beyond the shore whispered welcome.",
     date: "2026-02-16",
     generated_image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=800&q=80",
     emotion: "Determination",
-    symbols: ["City", "Door", "Ocean"],
+    symbols: ["City", "Door", "Ocean", "Forest"],
     themes: ["Persistence", "Freedom", "Transition"],
+  },
+  {
+    id: "d7",
+    title: "The Constellation Swimmer",
+    description: "I was flying through an ocean that existed in space. Stars reflected off the waves like bioluminescent creatures. I could run across the surface, each step sending ripples through the mirror-like water. The constellations rearranged themselves into faces I recognized.",
+    date: "2026-02-12",
+    generated_image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
+    emotion: "Wonder",
+    symbols: ["Flying", "Ocean", "Stars", "Mirror", "Running"],
+    themes: ["Connection", "Cosmos", "Identity"],
+  },
+  {
+    id: "d8",
+    title: "The Living Library",
+    description: "Deep in a forest, I found a library where the books were alive. Each one had a door on its spine that led to the world inside. A warm light emanated from the pages. The librarian was a tree that spoke in whispered verse about forgotten memories.",
+    date: "2026-02-08",
+    generated_image: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&q=80",
+    emotion: "Curiosity",
+    symbols: ["Forest", "Door", "Light"],
+    themes: ["Knowledge", "Memory", "Transformation"],
+  },
+  {
+    id: "d9",
+    title: "The Mirror Marathon",
+    description: "I was running through an endless hall of mirrors. In each mirror, I saw a different version of myself at different ages. The stars were visible through the glass ceiling. Some reflections ran with me, others stood still, watching. The running never felt exhausting — it felt like flying.",
+    date: "2026-02-04",
+    generated_image: "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=800&q=80",
+    emotion: "Introspection",
+    symbols: ["Mirror", "Running", "Stars"],
+    themes: ["Self-Discovery", "Time", "Reflection"],
+  },
+  {
+    id: "d10",
+    title: "The Submerged Cathedral",
+    description: "A massive cathedral sat beneath the ocean, its stained glass windows glowing with ancient light. Doors lined every wall, each leading to a different city frozen in time. Fish swam through the nave like parishioners. I floated in the water, breathing freely, at peace.",
+    date: "2026-01-30",
+    generated_image: "https://images.unsplash.com/photo-1551244072-5d12893278ab?w=800&q=80",
+    emotion: "Serenity",
+    symbols: ["Ocean", "Light", "Door", "City"],
+    themes: ["Sacred", "History", "Peace"],
   },
 ];

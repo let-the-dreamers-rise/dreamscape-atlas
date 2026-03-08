@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { PenLine, Clock, Map, Sparkles, ArrowRight, Brain, Zap, TrendingUp } from "lucide-react";
+import { PenLine, Clock, Map, Sparkles, ArrowRight, Brain, Zap, TrendingUp, Users, Shield, Layers } from "lucide-react";
 import { useDreams, useSymbols } from "@/hooks/useDreams";
+import { useConsent } from "@/hooks/useConsent";
 import { generatePatternInsights, PatternInsight } from "@/lib/patternInsights";
+import { computeMemoryClusters } from "@/lib/memoryConsolidation";
+import { useAuth } from "@/contexts/AuthContext";
 import GlowOrb from "@/components/GlowOrb";
 import dreamHero from "@/assets/dream-hero.jpg";
 
@@ -50,11 +53,16 @@ const InsightCard = ({ insight, index }: { insight: PatternInsight; index: numbe
 };
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const { allDreams, userDreams } = useDreams();
   const allSymbols = useSymbols(allDreams);
+  const { consent } = useConsent();
   const topSymbols = [...allSymbols].sort((a, b) => b.frequency - a.frequency).slice(0, 5);
   const recentDreams = allDreams.slice(0, 3);
-  const insights = generatePatternInsights(allDreams, allSymbols);
+  
+  // Respect consent: only show patterns/clusters if consent granted
+  const insights = consent.patternDetection ? generatePatternInsights(allDreams, allSymbols) : [];
+  const clusters = consent.clusterFormation ? computeMemoryClusters(allDreams) : [];
 
   const totalDreams = allDreams.length;
   const totalSymbols = allSymbols.length;
@@ -104,7 +112,7 @@ const Dashboard = () => {
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-sm sm:text-base text-muted-foreground max-w-md mb-10 leading-relaxed">
-            Record your dreams. Let AI decode the patterns. Explore the hidden architecture of your mind through an interactive visual atlas.
+            Record your dreams. Let AI decode the patterns. Explore the hidden architecture of your mind through hippocampal memory consolidation.
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
@@ -139,11 +147,12 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-3 gap-4 sm:gap-6 mb-20"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-20"
         >
           {[
             { label: "Dreams", value: String(totalDreams), sub: "recorded", icon: Brain },
             { label: "Symbols", value: String(totalSymbols), sub: "discovered", icon: Sparkles },
+            { label: "Clusters", value: String(clusters.length), sub: "consolidated", icon: Layers },
             { label: "Insights", value: String(insights.length), sub: "patterns found", icon: Zap },
           ].map((stat, i) => (
             <motion.div
@@ -168,12 +177,13 @@ const Dashboard = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-20"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20"
         >
           {[
             { to: "/capture", icon: PenLine, label: "Record Dream", desc: "Capture tonight's dream before it fades", color: "primary" },
-            { to: "/timeline", icon: Clock, label: "Timeline", desc: "Browse your chronological memory feed", color: "cyan" },
-            { to: "/atlas", icon: Map, label: "Dream Atlas", desc: "Explore your subconscious symbol map", color: "violet" },
+            { to: "/atlas", icon: Map, label: "Neural Atlas", desc: "Explore your subconscious symbol map", color: "violet" },
+            { to: "/clusters", icon: Layers, label: "Memory Clusters", desc: "Hippocampal consolidation engine", color: "cyan" },
+            { to: "/collective", icon: Users, label: "Collective", desc: "Humanity's shared dream archetypes", color: "amber" },
           ].map((link, i) => (
             <motion.div key={link.to} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
               <Link to={link.to} className="group block p-6 rounded-2xl dream-card-hover relative overflow-hidden">
@@ -193,7 +203,7 @@ const Dashboard = () => {
 
         <div className="dream-divider mb-20" />
 
-        {/* Pattern Insights */}
+        {/* Pattern Insights (consent-gated) */}
         {insights.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -212,6 +222,13 @@ const Dashboard = () => {
                 <InsightCard key={insight.id} insight={insight} index={i} />
               ))}
             </div>
+          </motion.div>
+        )}
+
+        {!consent.patternDetection && user && (
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mb-20 p-5 rounded-2xl dream-glass text-center">
+            <Shield className="w-5 h-5 mx-auto mb-2 text-dream-rose" />
+            <p className="text-sm text-muted-foreground">Pattern detection is disabled. <Link to="/sovereignty" className="text-primary hover:underline">Manage consent</Link></p>
           </motion.div>
         )}
 

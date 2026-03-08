@@ -1,15 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Zap, ArrowRight, Layers } from "lucide-react";
+import { Brain, Zap, ArrowRight, Layers, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDreams, useSymbols } from "@/hooks/useDreams";
+import { useConsent } from "@/hooks/useConsent";
 import { computeMemoryClusters, getConsolidationStage } from "@/lib/memoryConsolidation";
 import GlowOrb from "@/components/GlowOrb";
 
 const MemoryClusters = () => {
   const { allDreams, loading } = useDreams();
-  const clusters = computeMemoryClusters(allDreams);
+  const { consent } = useConsent();
+  const clusters = consent.clusterFormation ? computeMemoryClusters(allDreams) : [];
 
   const isEmpty = !loading && clusters.length === 0;
+  const consentBlocked = !consent.clusterFormation;
 
   return (
     <div className="relative min-h-[calc(100vh-4rem)] dream-noise">
@@ -77,7 +80,26 @@ const MemoryClusters = () => {
           </motion.div>
 
           {/* Clusters */}
-          {isEmpty ? (
+          {consentBlocked ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="text-center py-20"
+            >
+              <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: "hsl(var(--dream-accent-rose) / 0.1)", border: "1px solid hsl(var(--dream-accent-rose) / 0.2)" }}>
+                <Shield className="w-7 h-7 opacity-60" style={{ color: "hsl(var(--dream-accent-rose))" }} />
+              </div>
+              <h2 className="font-display text-xl font-bold text-foreground mb-2">Consolidation Disabled</h2>
+              <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto leading-relaxed">
+                Memory cluster formation is currently blocked by your consent settings.
+              </p>
+              <Link to="/sovereignty" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-display font-semibold text-sm text-primary-foreground transition-all duration-300 dream-glow-strong" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(280 70% 50%))" }}>
+                <Shield className="w-4 h-4" />
+                Manage Consent
+              </Link>
+            </motion.div>
+          ) : isEmpty ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
