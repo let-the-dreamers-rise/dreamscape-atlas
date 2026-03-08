@@ -32,7 +32,7 @@ const NeuralSovereignty = () => {
     if (!user) return;
     // Fetch consent logs
     supabase
-      .from("data_consent_log")
+      .from("data_consent_log" as any)
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
