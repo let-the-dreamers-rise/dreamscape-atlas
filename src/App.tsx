@@ -11,6 +11,8 @@ import DreamTimeline from "./pages/DreamTimeline";
 import DreamDetail from "./pages/DreamDetail";
 import DreamAtlas from "./pages/DreamAtlas";
 import DreamSearch from "./pages/DreamSearch";
+import MemoryClusters from "./pages/MemoryClusters";
+import NeuralSovereignty from "./pages/NeuralSovereignty";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +33,8 @@ const App = () => (
               <Route path="/timeline" element={<DreamTimeline />} />
               <Route path="/dream/:id" element={<DreamDetail />} />
               <Route path="/atlas" element={<DreamAtlas />} />
+              <Route path="/clusters" element={<MemoryClusters />} />
+              <Route path="/sovereignty" element={<NeuralSovereignty />} />
               <Route path="/search" element={<DreamSearch />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
