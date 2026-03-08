@@ -44,12 +44,12 @@ const NeuralSovereignty = () => {
 
   const logConsent = async (action: string, scope: string, details: Record<string, unknown> = {}) => {
     if (!user) return;
-    await supabase.from("data_consent_log").insert({
+    await supabase.from("data_consent_log" as any).insert({
       user_id: user.id,
       action,
       scope,
       details,
-    });
+    } as any);
   };
 
   const toggleConsent = async (key: keyof ConsentState) => {
