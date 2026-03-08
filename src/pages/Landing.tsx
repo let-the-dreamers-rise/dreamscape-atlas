@@ -66,12 +66,12 @@ const Landing = () => {
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
             <Link
-              to="/"
+              to="/auth"
               className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-display font-bold text-sm transition-all duration-300 dream-glow-strong text-primary-foreground"
               style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(280 70% 50%))" }}
             >
               <Brain className="w-4 h-4" />
-              Enter DreamOS
+              Try the Demo
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <a
@@ -385,20 +385,20 @@ const Landing = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link
-                to="/"
+                to="/auth"
                 className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-display font-bold text-sm transition-all duration-300 dream-glow-strong text-primary-foreground"
                 style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(280 70% 50%))" }}
               >
                 <Brain className="w-4 h-4" />
-                Enter DreamOS
+                Try the Demo
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                to="/sovereignty"
+                to="/clusters"
                 className="dream-glass inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-display font-bold text-sm text-foreground hover:border-primary/30 transition-all"
               >
-                <Shield className="w-4 h-4 text-dream-rose" />
-                Neural Sovereignty
+                <Layers className="w-4 h-4 text-dream-cyan" />
+                See Memory Clusters
               </Link>
             </div>
           </motion.div>

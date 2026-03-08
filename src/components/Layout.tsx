@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut, Layers, Shield, Users, Sparkles } from "lucide-react";
 import StarField from "./StarField";
+import OnboardingTour from "./OnboardingTour";
+import PageTransition from "./PageTransition";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
@@ -15,6 +17,14 @@ const navItems = [
   { path: "/search", label: "Search", icon: Search },
 ];
 
+const mobileNavItems = [
+  { path: "/", label: "Home", icon: Brain },
+  { path: "/capture", label: "Record", icon: PenLine },
+  { path: "/clusters", label: "Memory", icon: Layers },
+  { path: "/atlas", label: "Atlas", icon: Map },
+  { path: "/collective", label: "Collective", icon: Users },
+];
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const { user, signOut } = useAuth();
@@ -22,8 +32,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <StarField />
+      <OnboardingTour />
 
-      {/* Navbar */}
+      {/* Desktop Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50">
         <div className="absolute inset-0 dream-glass-strong" style={{ borderBottom: "1px solid hsl(var(--border) / 0.3)" }} />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,28 +122,53 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <span className="hidden sm:inline">Sign In</span>
                 </Link>
               )}
-
-              {/* Mobile nav */}
-              <div className="flex md:hidden items-center gap-0.5 p-1 rounded-xl dream-glass">
-                {navItems.slice(0, 6).map((item) => {
-                  const isActive = location.pathname === item.path;
-                  return (
-                    <Link
-                      key={item.path}
-                      to={item.path}
-                      className={`p-2 rounded-lg transition-all ${isActive ? "text-primary bg-primary/10" : "text-muted-foreground"}`}
-                    >
-                      <item.icon className="w-4 h-4" />
-                    </Link>
-                  );
-                })}
-              </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <main className="pt-16 relative z-10">{children}</main>
+      {/* Mobile Bottom Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+        <div
+          className="dream-glass-strong mx-2 mb-2 rounded-2xl px-2 py-1.5 flex items-center justify-around"
+          style={{ borderTop: "1px solid hsl(var(--border) / 0.3)" }}
+        >
+          {mobileNavItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all"
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-pill"
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background: "hsl(var(--primary) / 0.12)",
+                      border: "1px solid hsl(var(--primary) / 0.2)",
+                    }}
+                    transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
+                  />
+                )}
+                <item.icon className={`relative z-10 w-5 h-5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
+                <span className={`relative z-10 text-[9px] font-bold ${isActive ? "text-primary" : "text-muted-foreground"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      <main className="pt-16 pb-20 md:pb-0 relative z-10">
+        <AnimatePresence mode="wait">
+          <PageTransition key={location.pathname}>
+            {children}
+          </PageTransition>
+        </AnimatePresence>
+      </main>
     </div>
   );
 };
