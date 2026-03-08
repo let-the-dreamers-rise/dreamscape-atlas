@@ -226,6 +226,14 @@
   .animate-shimmer {
     animation: shimmer 3s ease-in-out infinite;
   }
+
+  .neural-pulse {
+    animation: neural-pulse 2s ease-in-out infinite;
+  }
+
+  .synapse-fire {
+    animation: synapse-fire 1.5s ease-in-out infinite;
+  }
 }
 
 @keyframes float {
@@ -241,4 +249,15 @@
 @keyframes shimmer {
   0% { background-position: -200% center; }
   100% { background-position: 200% center; }
+}
+
+@keyframes neural-pulse {
+  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 2px currentColor); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+}
+
+@keyframes synapse-fire {
+  0% { stroke-dashoffset: 100; opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.3; }
 }

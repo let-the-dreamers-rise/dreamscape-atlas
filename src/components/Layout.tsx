@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut } from "lucide-react";
+import { Brain, PenLine, Clock, Map, Search, LogIn, LogOut, Layers, Shield } from "lucide-react";
 import StarField from "./StarField";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -9,6 +9,8 @@ const navItems = [
   { path: "/capture", label: "Record", icon: PenLine },
   { path: "/timeline", label: "Timeline", icon: Clock },
   { path: "/atlas", label: "Atlas", icon: Map },
+  { path: "/clusters", label: "Memory", icon: Layers },
+  { path: "/sovereignty", label: "Sovereignty", icon: Shield },
   { path: "/search", label: "Search", icon: Search },
 ];
 
