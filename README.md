@@ -12,8 +12,6 @@
 </p>
 
 <p align="center">
-  <a href="https://somnia-atlas.lovable.app/landing"><strong>🌐 Live Demo</strong></a> &nbsp;·&nbsp;
-  <a href="https://somnia-atlas.lovable.app"><strong>🧠 Enter DreamOS</strong></a> &nbsp;·&nbsp;
   <a href="#-architecture"><strong>📐 Architecture</strong></a> &nbsp;·&nbsp;
   <a href="#-three-pillars"><strong>🧬 Three Pillars</strong></a>
 </p>
@@ -158,5 +156,4 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
   <strong>Built for PL_Genesis: Frontiers of Collaboration — Neurotech & BCI Track</strong>
   <br/><br/>
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" />
-  <img src="https://img.shields.io/badge/Made_with-Lovable-ff69b4?style=flat-square" />
 </p>
