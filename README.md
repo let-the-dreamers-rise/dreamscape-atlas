@@ -1,38 +1,87 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/PL__Genesis-Neurotech%20%26%20BCI-blueviolet?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Track-Frontiers%20of%20Collaboration-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Stack-React%20%2B%20Supabase%20%2B%20Gemini-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/🧠_DreamOS-Cognitive_Architecture-blueviolet?style=for-the-badge&labelColor=1a1a2e" />
+  <img src="https://img.shields.io/badge/PL__Genesis-Neurotech_%26_BCI_Track-blue?style=for-the-badge&labelColor=16213e" />
+  <img src="https://img.shields.io/badge/Stack-React_•_Supabase_•_Gemini-00b894?style=for-the-badge&labelColor=0d1117" />
 </p>
 
-<h1 align="center">🧠 DreamOS — Neuro-Inspired Cognitive Architecture</h1>
-
-<p align="center">
-  <strong>A dream operating system that models hippocampal memory consolidation, enforces neural data sovereignty, and builds collective intelligence from human dream patterns — without centralized data collection.</strong>
-</p>
+<h1 align="center">🧠 DreamOS</h1>
+<h3 align="center">Neuro-Inspired Cognitive Architecture for Dream Intelligence</h3>
 
 <p align="center">
-  <a href="https://somnia-atlas.lovable.app/landing">🔗 Live Demo</a> · 
-  <a href="https://somnia-atlas.lovable.app">🧠 Enter DreamOS</a>
+  <em>A dream operating system that models hippocampal memory consolidation, enforces neural data sovereignty, and builds collective intelligence from human dream patterns — without centralized data collection.</em>
 </p>
+
+<p align="center">
+  <a href="https://somnia-atlas.lovable.app/landing"><strong>🌐 Live Demo</strong></a> &nbsp;·&nbsp;
+  <a href="https://somnia-atlas.lovable.app"><strong>🧠 Enter DreamOS</strong></a> &nbsp;·&nbsp;
+  <a href="#-architecture"><strong>📐 Architecture</strong></a> &nbsp;·&nbsp;
+  <a href="#-three-pillars"><strong>🧬 Three Pillars</strong></a>
+</p>
+
+<br/>
 
 ---
 
-## 🎯 Problem Statement
+## 🎯 The Problem
 
-Current dream journaling apps treat dreams as isolated text entries. They miss the fundamental insight from neuroscience: **the brain doesn't store dreams as discrete events — it consolidates them through hippocampal replay, forming associative memory clusters during sleep.**
+> Current dream journaling apps treat dreams as isolated text entries. They miss a fundamental neuroscience insight: **the brain doesn't store dreams as discrete events — it consolidates them through hippocampal replay, forming associative memory clusters during sleep.**
 
-Meanwhile, brain-computer interfaces and neurotech platforms collect intimate cognitive data without meaningful consent frameworks. Users have no cognitive liberty — no right to control, export, or delete their own neural data.
+Meanwhile, brain-computer interfaces collect intimate cognitive data without meaningful consent frameworks. Users have **no cognitive liberty** — no right to control, export, or delete their own neural data.
 
-**DreamOS solves both problems.**
+**DreamOS solves both.**
 
 ---
 
-## 🏗️ Architecture Overview
+## 🧬 Three Pillars
+
+### 1️⃣ Hippocampal Memory Consolidation Engine
+
+**Neuroscience basis:** During sleep, the hippocampus replays recent experiences, strengthening shared neural patterns. This process — *memory consolidation* — transforms fragile short-term memories into stable long-term representations via **synaptic potentiation** (Hebb's rule: *"neurons that fire together wire together"*).
+
+**Our algorithm:**
+
+| Step | Process | Neuroscience Analogy |
+|------|---------|---------------------|
+| **1** | Build symbol co-occurrence matrix | Neurons co-activating during hippocampal replay |
+| **2** | Graph-based clustering via BFS (threshold ≥ 2) | Synaptic potentiation forming memory traces |
+| **3** | Consolidation strength scoring | Long-Term Potentiation (LTP) — more repetition = stronger encoding |
+| **4** | Stage classification (Emerging → Deep Memory) | Sleep stage progression in memory formation |
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    DreamOS Architecture                   │
-├─────────────────────────────────────────────────────────┤
+strength = min(1, (dreamCount / totalDreams) × (symbolCount / 3))
+
+Stages:
+  Emerging      (< 0.3)  — Nascent pattern detected
+  Encoding      (0.3–0.5) — Neural pathways forming
+  Consolidating (0.5–0.7) — Active hippocampal replay
+  Deep Memory   (≥ 0.7)  — Fully consolidated long-term memory
+```
+
+### 2️⃣ Neural Data Sovereignty Framework
+
+**Principle:** Users must have the right to control what happens with their intimate cognitive data.
+
+| Capability | Implementation | Enforced? |
+|---|---|:---:|
+| **Granular consent** | 4 independent toggles: AI Analysis, Image Gen, Pattern Detection, Cluster Formation | ✅ |
+| **Immutable audit trail** | Every consent change logged to `data_consent_log` | ✅ |
+| **Full data portability** | One-click JSON export of all data | ✅ |
+| **Permanent deletion** | Cascade delete all user data (irreversible, logged) | ✅ |
+
+> Consent is **enforced at the edge function level** — not cosmetic. If AI analysis consent is revoked, the analysis pipeline returns a minimal response.
+
+### 3️⃣ Collective Intelligence Layer
+
+Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion correlations — a "collective unconscious" mapped to Jungian archetypes. **No individual data is ever exposed.**
+
+---
+
+## 📐 Architecture
+
+```
+┌───────────────────────────────────────────────────────────┐
+│                    DreamOS Architecture                    │
+├───────────────────────────────────────────────────────────┤
 │                                                           │
 │  ┌─────────────┐    ┌──────────────┐    ┌─────────────┐  │
 │  │   Dream      │    │  Hippocampal  │    │  Neural     │  │
@@ -51,91 +100,47 @@ Meanwhile, brain-computer interfaces and neurotech platforms collect intimate co
 │  │        Neural Data Sovereignty Layer               │   │
 │  │  Consent Controls │ Audit Trail │ Export │ Delete   │   │
 │  └───────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🧬 Three Pillars
+## 🛡️ Security Model
 
-### 1. Hippocampal Memory Consolidation Engine
-
-**Neuroscience basis:** During sleep, the hippocampus replays recent experiences, strengthening shared neural patterns across memories. This process — *memory consolidation* — transforms fragile short-term memories into stable long-term representations through **synaptic potentiation** (Hebb's rule: "neurons that fire together wire together").
-
-**Our implementation:**
-
-```
-Algorithm: computeMemoryClusters(dreams[])
-├── Step 1: Build symbol co-occurrence matrix
-│   └── For each dream, count how often symbol pairs appear together
-│       (analogous to neurons co-activating during hippocampal replay)
-│
-├── Step 2: Graph-based clustering via BFS
-│   └── Traverse co-occurrence graph, connecting symbols with
-│       association count ≥ 2 (threshold for synaptic potentiation)
-│   └── Connected components become memory clusters
-│
-├── Step 3: Consolidation strength scoring
-│   └── strength = min(1, (dreamCount / totalDreams) × (symbolCount / 3))
-│   └── Models Long-Term Potentiation (LTP) — more repetition = stronger encoding
-│
-└── Step 4: Stage classification
-    ├── Emerging   (< 0.3) — Nascent pattern detected
-    ├── Encoding   (0.3-0.5) — Neural pathways forming
-    ├── Consolidating (0.5-0.7) — Active hippocampal replay
-    └── Deep Memory (≥ 0.7) — Fully consolidated into long-term memory
-```
-
-### 2. Neural Data Sovereignty Framework
-
-**Cognitive liberty principle:** Users must have the right to control what happens with their intimate cognitive data.
-
-| Capability | Implementation | Enforced? |
-|---|---|---|
-| **Granular consent** | 4 independent toggles: AI Analysis, Image Gen, Pattern Detection, Cluster Formation | ✅ Edge function checks `user_consent` before processing |
-| **Immutable audit trail** | Every consent change logged to `data_consent_log` | ✅ Append-only (no UPDATE/DELETE RLS) |
-| **Full data portability** | One-click JSON export of all data | ✅ Client-side export |
-| **Permanent deletion** | Cascade delete all user data | ✅ Irreversible, logged |
-
-### 3. Collective Intelligence Layer
-
-Privacy-preserving aggregation of anonymous symbol frequencies and emotion correlations — a "collective unconscious" mapped to Jungian archetypes. **No individual data exposed.**
+| Layer | Mechanism |
+|-------|-----------|
+| **Row-Level Security** | Every table enforces `auth.uid() = user_id` |
+| **Consent enforcement** | Edge functions validate consent before processing |
+| **Audit trail** | Append-only — no UPDATE/DELETE allowed via RLS |
+| **JWT validation** | All AI pipeline calls require valid auth tokens |
 
 ---
 
-## 🛡️ Security
+## 🧰 Tech Stack
 
-- **Row-Level Security** on every table (`auth.uid() = user_id`)
-- **Consent enforcement** in edge functions (not cosmetic)
-- **Audit trail** is append-only
-- **JWT validation** on all AI pipeline calls
-
----
-
-## 🧰 Stack
-
-| Layer | Tech |
-|---|---|
-| Frontend | React 18 + TypeScript + Vite |
-| Styling | Tailwind CSS + custom design tokens |
-| Animation | Framer Motion |
-| Graph | React Flow (@xyflow/react) |
-| Backend | Supabase (Postgres + Auth + Edge Functions + RLS) |
-| AI | Google Gemini 2.5 Flash |
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18 · TypeScript · Vite |
+| **Styling** | Tailwind CSS · Custom design tokens · Framer Motion |
+| **Visualization** | React Flow (@xyflow/react) · Recharts |
+| **Backend** | Supabase (Postgres · Auth · Edge Functions · RLS) |
+| **AI** | Google Gemini 2.5 Flash (via Lovable AI Gateway) |
 
 ---
 
-## 🚀 Judge Demo Flow
+## 🚀 Demo Flow
 
-1. Visit [/landing](https://somnia-atlas.lovable.app/landing) → architecture pitch
-2. "Enter DreamOS" → dashboard with demo dreams
-3. **Memory Clusters** → hippocampal consolidation in action
-4. **Neural Atlas** → interactive symbol graph
-5. **Sovereignty** → toggle consent off → verify enforcement
-6. **Collective** → anonymous aggregate patterns
-7. **Record a dream** → AI analysis → new clusters
+| Step | Page | What to See |
+|------|------|-------------|
+| 1 | [`/landing`](https://somnia-atlas.lovable.app/landing) | Architecture pitch & algorithm deep-dive |
+| 2 | [`/`](https://somnia-atlas.lovable.app) | Dashboard with dream stats |
+| 3 | `/clusters` | Hippocampal consolidation in action |
+| 4 | `/atlas` | Interactive symbol graph visualization |
+| 5 | `/sovereignty` | Toggle consent off → verify enforcement |
+| 6 | `/collective` | Anonymous aggregate patterns |
+| 7 | `/capture` | Record a dream → AI analysis → new clusters |
 
-**Demo:** Click "Try Demo" on auth page (`demo@dreamos.app`)
+> **Quick start:** Click **"Try Demo"** on the auth page (`demo@dreamos.app`)
 
 ---
 
@@ -149,76 +154,9 @@ Privacy-preserving aggregation of anonymous symbol frequencies and emotion corre
 
 ---
 
-<p align="center"><strong>Built for PL_Genesis: Frontiers of Collaboration — Neurotech & BCI Track</strong></p>
-
-## Project info
-
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+<p align="center">
+  <strong>Built for PL_Genesis: Frontiers of Collaboration — Neurotech & BCI Track</strong>
+  <br/><br/>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/Made_with-Lovable-ff69b4?style=flat-square" />
+</p>
