@@ -122,7 +122,7 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
 | **Styling** | Tailwind CSS · Custom design tokens · Framer Motion |
 | **Visualization** | React Flow (@xyflow/react) · Recharts |
 | **Backend** | Supabase (Postgres · Auth · Edge Functions · RLS) |
-| **AI** | Google Gemini 2.5 Flash (via Lovable AI Gateway) |
+| **AI** | Google Gemini  |
 
 ---
 
@@ -130,8 +130,8 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
 
 | Step | Page | What to See |
 |------|------|-------------|
-| 1 | [`/landing`](https://somnia-atlas.lovable.app/landing) | Architecture pitch & algorithm deep-dive |
-| 2 | [`/`](https://somnia-atlas.lovable.app) | Dashboard with dream stats |
+| 1 | [`/landing`](https://dreamscape-atlas.vercel.app/landing) | Architecture pitch & algorithm deep-dive |
+| 2 | [`/`](https://dreamscape-atlas.vercel.app) | Dashboard with dream stats |
 | 3 | `/clusters` | Hippocampal consolidation in action |
 | 4 | `/atlas` | Interactive symbol graph visualization |
 | 5 | `/sovereignty` | Toggle consent off → verify enforcement |
