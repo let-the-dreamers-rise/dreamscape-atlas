@@ -130,7 +130,7 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
 
 | Step | Page | What to See |
 |------|------|-------------|
-| 1 | [`/landing`](https://dreamscape-atlas.vercel.app/landing) | Architecture pitch & algorithm deep-dive |
+| 1 | [`/landing`] | Architecture pitch & algorithm deep-dive |
 | 2 | [`/`](https://dreamscape-atlas.vercel.app) | Dashboard with dream stats |
 | 3 | `/clusters` | Hippocampal consolidation in action |
 | 4 | `/atlas` | Interactive symbol graph visualization |
