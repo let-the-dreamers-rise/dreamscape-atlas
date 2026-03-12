@@ -138,8 +138,6 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
 | 6 | `/collective` | Anonymous aggregate patterns |
 | 7 | `/capture` | Record a dream → AI analysis → new clusters |
 
-> **Quick start:** Click **"Try Demo"** on the auth page (`demo@dreamos.app`)
-
 ---
 
 ## 📚 References
