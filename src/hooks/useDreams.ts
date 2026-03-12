@@ -1,25 +1,29 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { Dream, Symbol } from "@/lib/types";
 import { mockDreams, mockSymbols } from "@/lib/dreamData";
 
 /**
  * Hook that fetches real user dreams from the DB and merges with mock demo data.
- * If no user is logged in, returns only demo data.
+ * Uses AuthContext to avoid duplicate auth subscriptions.
  */
 export function useDreams() {
+  const { user, loading: authLoading } = useAuth();
   const [userDreams, setUserDreams] = useState<Dream[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserDreams = useCallback(async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        setUserDreams([]);
-        setLoading(false);
-        return;
-      }
+  const isDemo = user?.email === "demo@dreamos.app";
+  const showMockData = !user || isDemo;
 
+  const fetchUserDreams = useCallback(async () => {
+    if (!user) {
+      setUserDreams([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
       // Fetch dreams
       const { data: dreams, error } = await supabase
         .from("dreams")
@@ -80,37 +84,17 @@ export function useDreams() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
+  // Fetch when auth is ready and user changes
   useEffect(() => {
+    if (authLoading) return;
     fetchUserDreams();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      fetchUserDreams();
-    });
-
-    return () => subscription.unsubscribe();
-  }, [fetchUserDreams]);
-
-  // Show mock data for unauthenticated users and demo account; hide for regular signed-in users
-  const [showMockData, setShowMockData] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      const isDemo = user?.email === "demo@dreamos.app";
-      setShowMockData(!user || isDemo);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      const isDemo = session?.user?.email === "demo@dreamos.app";
-      setShowMockData(!session?.user || isDemo);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+  }, [authLoading, fetchUserDreams]);
 
   const allDreams = showMockData ? [...userDreams, ...mockDreams] : userDreams;
 
-  return { allDreams, userDreams, demoDreams: mockDreams, loading, showMockData, refetch: fetchUserDreams };
+  return { allDreams, userDreams, demoDreams: mockDreams, loading: loading || authLoading, showMockData, refetch: fetchUserDreams };
 }
 
 /**
