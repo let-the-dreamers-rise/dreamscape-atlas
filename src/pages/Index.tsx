@@ -54,8 +54,8 @@ const InsightCard = ({ insight, index }: { insight: PatternInsight; index: numbe
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { allDreams, userDreams } = useDreams();
-  const allSymbols = useSymbols(allDreams);
+  const { allDreams, userDreams, showMockData } = useDreams();
+  const allSymbols = useSymbols(allDreams, showMockData);
   const { consent } = useConsent();
   const topSymbols = [...allSymbols].sort((a, b) => b.frequency - a.frequency).slice(0, 5);
   const recentDreams = allDreams.slice(0, 3);
