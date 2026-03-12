@@ -155,8 +155,8 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
 }
 
 const DreamAtlas = () => {
-  const { allDreams, loading } = useDreams();
-  const allSymbols = useSymbols(allDreams);
+  const { allDreams, loading, showMockData } = useDreams();
+  const allSymbols = useSymbols(allDreams, showMockData);
   const clusters = computeMemoryClusters(allDreams);
   const { nodes: graphNodes, edges: graphEdges } = buildGraph(allSymbols, allDreams);
 

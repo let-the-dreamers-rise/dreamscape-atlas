@@ -110,28 +110,14 @@ export function useDreams() {
 
   const allDreams = showMockData ? [...userDreams, ...mockDreams] : userDreams;
 
-  return { allDreams, userDreams, demoDreams: mockDreams, loading, refetch: fetchUserDreams };
+  return { allDreams, userDreams, demoDreams: mockDreams, loading, showMockData, refetch: fetchUserDreams };
 }
 
 /**
  * Hook that builds a symbol list from dreams.
- * Only merges mock symbols for unauthenticated/demo users.
+ * Only merges mock symbols when showMockData is true.
  */
-export function useSymbols(allDreams: Dream[]) {
-  const [includeMock, setIncludeMock] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      const isDemo = user?.email === "demo@dreamos.app";
-      setIncludeMock(!user || isDemo);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      const isDemo = session?.user?.email === "demo@dreamos.app";
-      setIncludeMock(!session?.user || isDemo);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
+export function useSymbols(allDreams: Dream[], showMockData: boolean = true) {
   const symbolFrequency = new Map<string, number>();
 
   for (const dream of allDreams) {
@@ -141,7 +127,7 @@ export function useSymbols(allDreams: Dream[]) {
   }
 
   // Only merge mock symbols for unauthenticated/demo users
-  if (includeMock) {
+  if (showMockData) {
     for (const ms of mockSymbols) {
       const current = symbolFrequency.get(ms.name) || 0;
       if (current < ms.frequency) {
