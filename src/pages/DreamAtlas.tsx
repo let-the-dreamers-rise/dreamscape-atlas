@@ -37,6 +37,7 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
     const angle = (2 * Math.PI * i) / symbols.length;
     const radius = 200 + s.frequency * 15;
     const color = getColor(s.name);
+    const nodeSize = Math.max(60, 40 + s.frequency * 8 + s.name.length * 3);
     return {
       id: s.id,
       type: "default",
@@ -46,18 +47,22 @@ function buildGraph(symbols: DreamSymbol[], dreams: Dream[]) {
         background: `${color}18`,
         border: `1.5px solid ${color}55`,
         borderRadius: "50%",
-        width: 40 + s.frequency * 5,
-        height: 40 + s.frequency * 5,
+        width: nodeSize,
+        height: nodeSize,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "11px",
+        fontSize: s.name.length > 12 ? "9px" : "11px",
         fontWeight: 700,
         fontFamily: '"Space Grotesk", sans-serif',
         color,
         boxShadow: `0 0 35px ${color}25, inset 0 0 25px ${color}0a`,
         cursor: "pointer",
         backdropFilter: "blur(8px)",
+        padding: "4px",
+        textAlign: "center" as const,
+        wordBreak: "break-word" as const,
+        overflow: "hidden",
       },
     };
   });
