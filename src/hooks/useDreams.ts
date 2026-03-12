@@ -114,9 +114,24 @@ export function useDreams() {
 }
 
 /**
- * Hook that builds a merged symbol list from mock + user dreams.
+ * Hook that builds a symbol list from dreams.
+ * Only merges mock symbols for unauthenticated/demo users.
  */
 export function useSymbols(allDreams: Dream[]) {
+  const [includeMock, setIncludeMock] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      const isDemo = user?.email === "demo@dreamos.app";
+      setIncludeMock(!user || isDemo);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const isDemo = session?.user?.email === "demo@dreamos.app";
+      setIncludeMock(!session?.user || isDemo);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   const symbolFrequency = new Map<string, number>();
 
   for (const dream of allDreams) {
@@ -125,11 +140,13 @@ export function useSymbols(allDreams: Dream[]) {
     }
   }
 
-  // Merge with mock symbols (use higher frequency)
-  for (const ms of mockSymbols) {
-    const current = symbolFrequency.get(ms.name) || 0;
-    if (current < ms.frequency) {
-      symbolFrequency.set(ms.name, ms.frequency);
+  // Only merge mock symbols for unauthenticated/demo users
+  if (includeMock) {
+    for (const ms of mockSymbols) {
+      const current = symbolFrequency.get(ms.name) || 0;
+      if (current < ms.frequency) {
+        symbolFrequency.set(ms.name, ms.frequency);
+      }
     }
   }
 
