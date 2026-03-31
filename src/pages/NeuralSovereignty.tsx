@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Shield, Download, Trash2, Eye, EyeOff, FileText, AlertTriangle, CheckCircle, Brain } from "lucide-react";
+import { Shield, Download, Trash2, Eye, EyeOff, FileText, AlertTriangle, CheckCircle, Brain, Lock, HardDrive, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDreams } from "@/hooks/useDreams";
 import { useConsent } from "@/hooks/useConsent";
+import { useStoracha, useLitProtocol } from "@/hooks/useSponsorIntegrations";
 import GlowOrb from "@/components/GlowOrb";
 
 const NeuralSovereignty = () => {
