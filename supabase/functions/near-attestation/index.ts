@@ -128,18 +128,20 @@ serve(async (req) => {
     const txResult = await txResponse.json();
 
     // Log attestation
-    await supabase.from("data_consent_log").insert({
-      user_id: user.id,
-      action: "CHAIN_ATTESTATION",
-      scope: "near_protocol",
-      details: {
-        blockchain: "NEAR Protocol (Testnet)",
-        patternHash,
-        patternCount: patternData.length || 0,
-        accountId: NEAR_ACCOUNT_ID,
-        timestamp: new Date().toISOString(),
-      },
-    });
+    if (userId !== "anonymous") {
+      await adminClient.from("data_consent_log").insert({
+        user_id: userId,
+        action: "CHAIN_ATTESTATION",
+        scope: "near_protocol",
+        details: {
+          blockchain: "NEAR Protocol (Testnet)",
+          patternHash,
+          patternCount: patternData.length || 0,
+          accountId: NEAR_ACCOUNT_ID,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
 
     return new Response(
       JSON.stringify({
