@@ -2,6 +2,11 @@
   <img src="https://img.shields.io/badge/🧠_DreamOS-Cognitive_Architecture-blueviolet?style=for-the-badge&labelColor=1a1a2e" />
   <img src="https://img.shields.io/badge/PL__Genesis-Neurotech_%26_BCI_Track-blue?style=for-the-badge&labelColor=16213e" />
   <img src="https://img.shields.io/badge/Stack-React_•_Supabase_•_Gemini-00b894?style=for-the-badge&labelColor=0d1117" />
+  <br/>
+  <img src="https://img.shields.io/badge/Storacha-Filecoin_Storage-0099ff?style=for-the-badge&labelColor=0d1117" />
+  <img src="https://img.shields.io/badge/Lit_Protocol-Encryption-8B5CF6?style=for-the-badge&labelColor=0d1117" />
+  <img src="https://img.shields.io/badge/NEAR-Blockchain_Attestation-00C08B?style=for-the-badge&labelColor=0d1117" />
+  <img src="https://img.shields.io/badge/Impulse_AI-ML_Inference-FF6B6B?style=for-the-badge&labelColor=0d1117" />
 </p>
 
 <h1 align="center">🧠 DreamOS</h1>
