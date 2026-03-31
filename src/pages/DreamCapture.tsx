@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PenLine, Sparkles, Loader2, Wand2 } from "lucide-react";
+import { PenLine, Sparkles, Loader2, Wand2, Cpu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useImpulseAI } from "@/hooks/useSponsorIntegrations";
 import GlowOrb from "@/components/GlowOrb";
 
 const DreamCapture = () => {
@@ -11,7 +12,8 @@ const DreamCapture = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stage, setStage] = useState<"idle" | "analyzing" | "imaging" | "saving">("idle");
+  const [stage, setStage] = useState<"idle" | "analyzing" | "impulse" | "imaging" | "saving">("idle");
+  const { analyzeDream: impulseAnalyze, lastAnalysis: impulseAnalysis } = useImpulseAI();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +39,20 @@ const DreamCapture = () => {
       });
 
       if (fnError) throw fnError;
+
+      // Impulse AI: deeper cognitive analysis (sponsor integration)
+      setStage("impulse");
+      try {
+        await impulseAnalyze({
+          symbols: analysis?.symbols || [],
+          emotion: analysis?.emotion || "",
+          themes: analysis?.themes || [],
+          description,
+        });
+      } catch {
+        // Non-blocking: Impulse AI enrichment is optional
+        console.log("Impulse AI enrichment skipped");
+      }
 
       setStage("saving");
 
@@ -101,6 +117,7 @@ const DreamCapture = () => {
   const stageLabel = {
     idle: "",
     analyzing: "AI is decoding your dream...",
+    impulse: "Impulse AI: cognitive pattern analysis...",
     imaging: "Generating dream visualization...",
     saving: "Saving to your atlas...",
   };
@@ -205,6 +222,35 @@ const DreamCapture = () => {
             <p className="text-xs text-muted-foreground leading-relaxed">
               Include sensory details — colors, sounds, textures, emotions. The more vivid your description, the better the AI can reconstruct your dream world and identify meaningful patterns.
             </p>
+          </motion.div>
+          {/* Impulse AI Sponsor Badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-6 p-4 rounded-2xl relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--dream-accent-rose) / 0.04), hsl(var(--primary) / 0.03))",
+              border: "1px solid hsl(var(--dream-accent-rose) / 0.15)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Cpu className="w-3.5 h-3.5" style={{ color: "hsl(var(--dream-accent-rose))" }} />
+              <span className="text-[10px] font-display font-bold text-foreground">Enhanced by Impulse AI</span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: "hsl(var(--dream-accent-rose) / 0.15)", color: "hsl(var(--dream-accent-rose))", border: "1px solid hsl(var(--dream-accent-rose) / 0.3)" }}>SPONSOR</span>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+              Each dream is analyzed by <strong className="text-foreground">Impulse AI's</strong> autonomous ML pipeline for Jungian archetype detection, emotional valence scoring, and memory consolidation prediction.
+            </p>
+            {impulseAnalysis && (
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {impulseAnalysis.archetypes?.slice(0, 3).map((a: string) => (
+                  <span key={a} className="text-[9px] font-mono text-center px-2 py-1 rounded-md" style={{ background: "hsl(var(--dream-accent-rose) / 0.1)", color: "hsl(var(--dream-accent-rose))" }}>
+                    {a}
+                  </span>
+                ))}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       </div>
