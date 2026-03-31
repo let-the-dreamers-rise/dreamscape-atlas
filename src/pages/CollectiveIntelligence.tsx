@@ -32,6 +32,7 @@ const CollectiveIntelligence = () => {
   const { allDreams } = useDreams();
   const [patterns, setPatterns] = useState<CollectivePattern[]>([]);
   const [loading, setLoading] = useState(true);
+  const { storeAttestation, attesting, lastAttestation } = useNearAttestation();
 
   // Compute local aggregate + fetch global
   useEffect(() => {
