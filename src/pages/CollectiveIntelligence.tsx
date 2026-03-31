@@ -287,29 +287,47 @@ const CollectiveIntelligence = () => {
               no individual dream data ever touches the blockchain.
             </p>
             {lastAttestation && (
-              <div className="p-3 rounded-xl mt-3" style={{ background: "hsl(var(--dream-accent-amber) / 0.08)", border: "1px solid hsl(var(--dream-accent-amber) / 0.15)" }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[9px] font-mono font-bold" style={{ color: "hsl(var(--dream-accent-amber))" }}>Latest Attestation</span>
+              <div className="p-4 rounded-xl mt-3 space-y-3" style={{ background: "hsl(var(--dream-accent-amber) / 0.08)", border: "1px solid hsl(var(--dream-accent-amber) / 0.15)" }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "hsl(var(--dream-accent-amber))" }} />
+                  <span className="text-[10px] font-display font-bold" style={{ color: "hsl(var(--dream-accent-amber))" }}>✓ Attestation Recorded</span>
+                  <span className="text-[8px] px-1.5 py-0.5 rounded font-mono" style={{ background: "hsl(var(--dream-accent-amber) / 0.15)", color: "hsl(var(--dream-accent-amber))" }}>
+                    {lastAttestation.network?.toUpperCase()}
+                  </span>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-mono text-muted-foreground">
-                    Hash: <span className="text-foreground">{lastAttestation.hash?.slice(0, 24)}...</span>
-                  </p>
-                  <p className="text-[10px] font-mono text-muted-foreground">
-                    Patterns: <span className="text-foreground">{lastAttestation.patternCount}</span> • Network: <span className="text-foreground">{lastAttestation.network}</span>
-                  </p>
-                  {lastAttestation.explorer_url && (
-                    <a
-                      href={lastAttestation.explorer_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[9px] font-mono mt-1"
-                      style={{ color: "hsl(var(--dream-accent-amber))" }}
-                    >
-                      View on NEAR Explorer <ExternalLink className="w-2.5 h-2.5" />
-                    </a>
-                  )}
+                <div className="p-2.5 rounded-lg" style={{ background: "hsl(var(--background) / 0.5)" }}>
+                  <p className="text-[9px] font-mono text-muted-foreground mb-1">SHA-256 Pattern Hash</p>
+                  <p className="text-[10px] font-mono text-foreground break-all leading-relaxed select-all">{lastAttestation.hash}</p>
                 </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="p-2 rounded-lg text-center" style={{ background: "hsl(var(--background) / 0.5)" }}>
+                    <p className="text-[9px] text-muted-foreground">Patterns</p>
+                    <p className="text-sm font-bold text-foreground">{lastAttestation.patternCount}</p>
+                  </div>
+                  <div className="p-2 rounded-lg text-center" style={{ background: "hsl(var(--background) / 0.5)" }}>
+                    <p className="text-[9px] text-muted-foreground">Account</p>
+                    <p className="text-[10px] font-mono font-bold text-foreground truncate">{lastAttestation.account}</p>
+                  </div>
+                  <div className="p-2 rounded-lg text-center" style={{ background: "hsl(var(--background) / 0.5)" }}>
+                    <p className="text-[9px] text-muted-foreground">Blockchain</p>
+                    <p className="text-[10px] font-bold text-foreground">{lastAttestation.blockchain}</p>
+                  </div>
+                </div>
+                <p className="text-[9px] text-muted-foreground italic">
+                  This hash cryptographically proves the integrity of {lastAttestation.patternCount} collective dream patterns. 
+                  The hash is deterministic — any change to the underlying data produces a completely different hash.
+                </p>
+                {lastAttestation.explorer_url && (
+                  <a
+                    href={lastAttestation.explorer_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold"
+                    style={{ color: "hsl(var(--dream-accent-amber))" }}
+                  >
+                    View NEAR Account on Explorer <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </div>
             )}
           </motion.div>
