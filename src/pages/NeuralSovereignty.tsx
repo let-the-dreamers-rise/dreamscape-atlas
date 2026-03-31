@@ -17,6 +17,8 @@ const NeuralSovereignty = () => {
   const [exporting, setExporting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const { uploadToFilecoin, uploading: storachaUploading, lastCid } = useStoracha();
+  const { encryptDreamData, encrypting } = useLitProtocol();
 
   useEffect(() => {
     if (!user) return;
