@@ -295,6 +295,12 @@ const CollectiveIntelligence = () => {
                     {lastAttestation.network?.toUpperCase()}
                   </span>
                 </div>
+                {lastAttestation.txHash && (
+                  <div className="p-2.5 rounded-lg" style={{ background: "hsl(var(--background) / 0.5)" }}>
+                    <p className="text-[9px] font-mono text-muted-foreground mb-1">Transaction Hash</p>
+                    <p className="text-[10px] font-mono text-foreground break-all leading-relaxed select-all">{lastAttestation.txHash}</p>
+                  </div>
+                )}
                 <div className="p-2.5 rounded-lg" style={{ background: "hsl(var(--background) / 0.5)" }}>
                   <p className="text-[9px] font-mono text-muted-foreground mb-1">SHA-256 Pattern Hash</p>
                   <p className="text-[10px] font-mono text-foreground break-all leading-relaxed select-all">{lastAttestation.hash}</p>
@@ -325,7 +331,7 @@ const CollectiveIntelligence = () => {
                     className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold"
                     style={{ color: "hsl(var(--dream-accent-amber))" }}
                   >
-                    View NEAR Account on Explorer <ExternalLink className="w-3 h-3" />
+                    View Transaction on NEAR Explorer <ExternalLink className="w-3 h-3" />
                   </a>
                 )}
               </div>
