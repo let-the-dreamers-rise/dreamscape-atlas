@@ -247,6 +247,73 @@ const CollectiveIntelligence = () => {
             </div>
           </div>
 
+          {/* NEAR Protocol Attestation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10 p-6 rounded-2xl relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--dream-accent-amber) / 0.05), hsl(var(--primary) / 0.03))",
+              border: "1px solid hsl(var(--dream-accent-amber) / 0.2)",
+            }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--dream-accent-amber) / 0.5), transparent)" }} />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Link2 className="w-4 h-4" style={{ color: "hsl(var(--dream-accent-amber))" }} />
+                <span className="text-xs font-display font-bold text-foreground">On-Chain Attestation</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: "hsl(var(--dream-accent-amber) / 0.15)", color: "hsl(var(--dream-accent-amber))", border: "1px solid hsl(var(--dream-accent-amber) / 0.3)" }}>NEAR PROTOCOL</span>
+              </div>
+              <motion.button
+                onClick={() => storeAttestation(patterns)}
+                disabled={attesting || patterns.length === 0}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all disabled:opacity-40"
+                style={{
+                  background: "hsl(var(--dream-accent-amber) / 0.15)",
+                  border: "1px solid hsl(var(--dream-accent-amber) / 0.3)",
+                  color: "hsl(var(--dream-accent-amber))",
+                }}
+              >
+                {attesting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Link2 className="w-3 h-3" />}
+                {attesting ? "Attesting..." : "Store Hash On-Chain"}
+              </motion.button>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-relaxed mb-3">
+              Store a cryptographic hash of collective pattern data on <strong className="text-foreground">NEAR Protocol</strong> blockchain.
+              Creates an immutable, trust-minimized attestation that collective intelligence data hasn't been tampered with — 
+              no individual dream data ever touches the blockchain.
+            </p>
+            {lastAttestation && (
+              <div className="p-3 rounded-xl mt-3" style={{ background: "hsl(var(--dream-accent-amber) / 0.08)", border: "1px solid hsl(var(--dream-accent-amber) / 0.15)" }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[9px] font-mono font-bold" style={{ color: "hsl(var(--dream-accent-amber))" }}>Latest Attestation</span>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-mono text-muted-foreground">
+                    Hash: <span className="text-foreground">{lastAttestation.hash?.slice(0, 24)}...</span>
+                  </p>
+                  <p className="text-[10px] font-mono text-muted-foreground">
+                    Patterns: <span className="text-foreground">{lastAttestation.patternCount}</span> • Network: <span className="text-foreground">{lastAttestation.network}</span>
+                  </p>
+                  {lastAttestation.explorer_url && (
+                    <a
+                      href={lastAttestation.explorer_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[9px] font-mono mt-1"
+                      style={{ color: "hsl(var(--dream-accent-amber))" }}
+                    >
+                      View on NEAR Explorer <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+          </motion.div>
+
           {/* Jungian Connection */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
