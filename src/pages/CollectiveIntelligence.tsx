@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Users, Globe, TrendingUp, Brain, Zap, BarChart3 } from "lucide-react";
+import { Users, Globe, TrendingUp, Brain, Zap, BarChart3, Link2, Loader2, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useDreams } from "@/hooks/useDreams";
+import { useNearAttestation } from "@/hooks/useSponsorIntegrations";
 import GlowOrb from "@/components/GlowOrb";
 
 interface CollectivePattern {
