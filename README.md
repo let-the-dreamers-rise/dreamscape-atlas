@@ -127,7 +127,52 @@ Privacy-preserving aggregation of **anonymous** symbol frequencies and emotion c
 | **Styling** | Tailwind CSS · Custom design tokens · Framer Motion |
 | **Visualization** | React Flow (@xyflow/react) · Recharts |
 | **Backend** | Supabase (Postgres · Auth · Edge Functions · RLS) |
-| **AI** | Google Gemini  |
+| **AI** | Google Gemini · Impulse AI |
+| **Storage** | Storacha (IPFS/Filecoin) |
+| **Encryption** | Lit Protocol (Threshold Cryptography) |
+| **Blockchain** | NEAR Protocol (Attestation Layer) |
+
+---
+
+## 🔗 Sponsor Bounty Integrations
+
+DreamOS integrates **all four** sponsor APIs as core infrastructure — not bolted-on features.
+
+### 1. Storacha / Filecoin — Decentralized Neural Data Storage
+**Edge Function:** `storacha-store`  
+**Page:** `/sovereignty` → "Store on Filecoin" button
+
+- Exports user dream data as a content-addressed JSON bundle to IPFS/Filecoin via Storacha's w3up HTTP Bridge
+- Each export includes a sovereignty manifest (owner ID, rights declaration, encryption status)
+- Returns a CID for permanent, censorship-resistant retrieval
+- Logged to immutable consent audit trail
+
+### 2. Lit Protocol — Programmable Encryption for Cognitive Data
+**Edge Function:** `lit-encrypt`  
+**Page:** `/sovereignty` → "Encrypt with Lit Protocol" button
+
+- Encrypts dream data using AES-256-GCM with Lit Protocol's threshold key management (Datil Network)
+- Programmable access control conditions — only the dream owner can decrypt
+- Implements true neural data sovereignty: encryption at the application layer, not just server ACLs
+- Composable with Storacha: encrypt first, then store on Filecoin
+
+### 3. NEAR Protocol — On-Chain Collective Intelligence Attestation
+**Edge Function:** `near-attestation`  
+**Page:** `/collective` → "Store Hash On-Chain" button
+
+- Computes SHA-256 hash of collective pattern data (anonymous aggregates only)
+- Stores attestation hash on NEAR Testnet — immutable proof of data integrity
+- No individual dream data touches the blockchain — only aggregate pattern hashes
+- Creates verifiable, trust-minimized record of humanity's collective dream archetypes
+
+### 4. Impulse AI — Autonomous ML for Dream Cognition
+**Edge Function:** `impulse-analyze`  
+**Page:** `/capture` (called during dream submission)
+
+- Jungian archetype classification (Hero, Shadow, Anima/Animus, Self, etc.)
+- Continuous emotional valence scoring (−1.0 to +1.0)
+- Memory consolidation likelihood prediction (0.0 to 1.0)
+- 128-dimensional dream vector embeddings for cross-cultural symbol mapping
 
 ---
 
