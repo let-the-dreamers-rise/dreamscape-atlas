@@ -12,7 +12,8 @@ const DreamCapture = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stage, setStage] = useState<"idle" | "analyzing" | "imaging" | "saving">("idle");
+  const [stage, setStage] = useState<"idle" | "analyzing" | "impulse" | "imaging" | "saving">("idle");
+  const { analyzeDream: impulseAnalyze, lastAnalysis: impulseAnalysis } = useImpulseAI();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
