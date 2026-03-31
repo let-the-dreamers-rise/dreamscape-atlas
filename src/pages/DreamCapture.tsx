@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { PenLine, Sparkles, Loader2, Wand2 } from "lucide-react";
+import { PenLine, Sparkles, Loader2, Wand2, Cpu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useImpulseAI } from "@/hooks/useSponsorIntegrations";
 import GlowOrb from "@/components/GlowOrb";
 
 const DreamCapture = () => {
