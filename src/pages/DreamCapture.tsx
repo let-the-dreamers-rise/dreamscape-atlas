@@ -40,6 +40,20 @@ const DreamCapture = () => {
 
       if (fnError) throw fnError;
 
+      // Impulse AI: deeper cognitive analysis (sponsor integration)
+      setStage("impulse");
+      try {
+        await impulseAnalyze({
+          symbols: analysis?.symbols || [],
+          emotion: analysis?.emotion || "",
+          themes: analysis?.themes || [],
+          description,
+        });
+      } catch {
+        // Non-blocking: Impulse AI enrichment is optional
+        console.log("Impulse AI enrichment skipped");
+      }
+
       setStage("saving");
 
       const { data: dream, error: dreamError } = await supabase
