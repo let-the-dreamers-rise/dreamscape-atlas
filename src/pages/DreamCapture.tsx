@@ -223,6 +223,35 @@ const DreamCapture = () => {
               Include sensory details — colors, sounds, textures, emotions. The more vivid your description, the better the AI can reconstruct your dream world and identify meaningful patterns.
             </p>
           </motion.div>
+          {/* Impulse AI Sponsor Badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+            className="mt-6 p-4 rounded-2xl relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--dream-accent-rose) / 0.04), hsl(var(--primary) / 0.03))",
+              border: "1px solid hsl(var(--dream-accent-rose) / 0.15)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Cpu className="w-3.5 h-3.5" style={{ color: "hsl(var(--dream-accent-rose))" }} />
+              <span className="text-[10px] font-display font-bold text-foreground">Enhanced by Impulse AI</span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: "hsl(var(--dream-accent-rose) / 0.15)", color: "hsl(var(--dream-accent-rose))", border: "1px solid hsl(var(--dream-accent-rose) / 0.3)" }}>SPONSOR</span>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1.5 leading-relaxed">
+              Each dream is analyzed by <strong className="text-foreground">Impulse AI's</strong> autonomous ML pipeline for Jungian archetype detection, emotional valence scoring, and memory consolidation prediction.
+            </p>
+            {impulseAnalysis && (
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {impulseAnalysis.archetypes?.slice(0, 3).map((a: string) => (
+                  <span key={a} className="text-[9px] font-mono text-center px-2 py-1 rounded-md" style={{ background: "hsl(var(--dream-accent-rose) / 0.1)", color: "hsl(var(--dream-accent-rose))" }}>
+                    {a}
+                  </span>
+                ))}
+              </div>
+            )}
+          </motion.div>
         </motion.div>
       </div>
     </div>
