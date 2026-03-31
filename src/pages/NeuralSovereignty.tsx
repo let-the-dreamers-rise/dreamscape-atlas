@@ -195,7 +195,7 @@ const NeuralSovereignty = () => {
           </div>
 
           {/* Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <button onClick={handleExport} disabled={exporting} className="p-5 rounded-xl dream-glass-strong text-left relative overflow-hidden group transition-all duration-300 hover:scale-[1.01]">
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--dream-accent-cyan) / 0.4), transparent)" }} />
               <Download className="w-5 h-5 mb-3" style={{ color: "hsl(var(--dream-accent-cyan))" }} />
@@ -208,6 +208,93 @@ const NeuralSovereignty = () => {
               <h3 className="font-display font-bold text-sm text-foreground mb-1">Delete All Data</h3>
               <p className="text-[11px] text-muted-foreground">Permanently erase all neural data.</p>
             </button>
+          </div>
+
+          {/* Sponsor Integrations: Storacha + Lit Protocol */}
+          <div className="mb-10">
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-4 flex items-center gap-2">
+              <span>Decentralized Sovereignty Layer</span>
+              <span className="text-[8px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: "hsl(var(--dream-accent-amber) / 0.15)", color: "hsl(var(--dream-accent-amber))", border: "1px solid hsl(var(--dream-accent-amber) / 0.3)" }}>SPONSOR INTEGRATIONS</span>
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Storacha / Filecoin */}
+              <motion.button
+                onClick={async () => {
+                  try {
+                    const { data: dreams } = await supabase.from("dreams").select("*").eq("user_id", user!.id);
+                    const { data: symbols } = await supabase.from("symbols").select("*").eq("user_id", user!.id);
+                    await uploadToFilecoin(
+                      { dreams: dreams || [], symbols: symbols || [] },
+                      { dreamCount: dreams?.length || 0, symbolCount: symbols?.length || 0 }
+                    );
+                  } catch {}
+                }}
+                disabled={storachaUploading}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="p-5 rounded-xl text-left relative overflow-hidden group transition-all duration-300"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--dream-accent-cyan) / 0.06), hsl(var(--primary) / 0.04))",
+                  border: "1px solid hsl(var(--dream-accent-cyan) / 0.2)",
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--dream-accent-cyan) / 0.5), transparent)" }} />
+                <div className="flex items-center gap-2 mb-3">
+                  <HardDrive className="w-5 h-5" style={{ color: "hsl(var(--dream-accent-cyan))" }} />
+                  {storachaUploading && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />}
+                </div>
+                <h3 className="font-display font-bold text-sm text-foreground mb-1">Store on Filecoin</h3>
+                <p className="text-[11px] text-muted-foreground mb-2">
+                  Upload to IPFS/Filecoin via <strong className="text-foreground">Storacha</strong> — content-addressed, decentralized, permanent.
+                </p>
+                {lastCid && (
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <span className="text-[9px] font-mono px-2 py-1 rounded-md" style={{ background: "hsl(var(--dream-accent-cyan) / 0.1)", color: "hsl(var(--dream-accent-cyan))" }}>
+                      CID: {lastCid.slice(0, 16)}...
+                    </span>
+                    <ExternalLink className="w-3 h-3" style={{ color: "hsl(var(--dream-accent-cyan))" }} />
+                  </div>
+                )}
+                <div className="flex items-center gap-1.5 mt-2">
+                  <img src="https://storacha.network/favicon.ico" alt="Storacha" className="w-3 h-3 rounded-sm opacity-60" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                  <span className="text-[8px] font-mono text-muted-foreground">Powered by Storacha × Filecoin</span>
+                </div>
+              </motion.button>
+
+              {/* Lit Protocol */}
+              <motion.button
+                onClick={async () => {
+                  try {
+                    const { data: dreams } = await supabase.from("dreams").select("*").eq("user_id", user!.id);
+                    await encryptDreamData({ dreams: dreams || [], count: dreams?.length || 0 });
+                  } catch {}
+                }}
+                disabled={encrypting}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="p-5 rounded-xl text-left relative overflow-hidden group transition-all duration-300"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--dream-accent-violet) / 0.06), hsl(var(--primary) / 0.04))",
+                  border: "1px solid hsl(var(--dream-accent-violet) / 0.2)",
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--dream-accent-violet) / 0.5), transparent)" }} />
+                <div className="flex items-center gap-2 mb-3">
+                  <Lock className="w-5 h-5" style={{ color: "hsl(var(--dream-accent-violet))" }} />
+                  {encrypting && <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />}
+                </div>
+                <h3 className="font-display font-bold text-sm text-foreground mb-1">Encrypt with Lit Protocol</h3>
+                <p className="text-[11px] text-muted-foreground mb-2">
+                  Programmable encryption via <strong className="text-foreground">Lit Protocol</strong> — threshold cryptography, user-controlled access.
+                </p>
+                <div className="flex items-center gap-1.5 mt-2">
+                  <span className="text-[8px] font-mono text-muted-foreground">🔐 AES-256-GCM × Threshold Keys</span>
+                </div>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-[8px] font-mono text-muted-foreground">Powered by Lit Protocol (Datil Network)</span>
+                </div>
+              </motion.button>
+            </div>
           </div>
 
           {/* Delete Confirmation */}
