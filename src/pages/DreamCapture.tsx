@@ -117,6 +117,7 @@ const DreamCapture = () => {
   const stageLabel = {
     idle: "",
     analyzing: "AI is decoding your dream...",
+    impulse: "Impulse AI: cognitive pattern analysis...",
     imaging: "Generating dream visualization...",
     saving: "Saving to your atlas...",
   };
