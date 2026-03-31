@@ -23,24 +23,20 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return new Response(JSON.stringify({ error: "Not authenticated" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Try to get user from auth header, but allow demo usage
+    let userId = "anonymous";
+    const authHeader = req.headers.get("authorization");
+    if (authHeader) {
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
       });
+      const { data: { user } } = await userClient.auth.getUser();
+      if (user) userId = user.id;
     }
 
     const NEAR_ACCOUNT_ID = Deno.env.get("NEAR_ACCOUNT_ID");
@@ -132,18 +128,20 @@ serve(async (req) => {
     const txResult = await txResponse.json();
 
     // Log attestation
-    await supabase.from("data_consent_log").insert({
-      user_id: user.id,
-      action: "CHAIN_ATTESTATION",
-      scope: "near_protocol",
-      details: {
-        blockchain: "NEAR Protocol (Testnet)",
-        patternHash,
-        patternCount: patternData.length || 0,
-        accountId: NEAR_ACCOUNT_ID,
-        timestamp: new Date().toISOString(),
-      },
-    });
+    if (userId !== "anonymous") {
+      await adminClient.from("data_consent_log").insert({
+        user_id: userId,
+        action: "CHAIN_ATTESTATION",
+        scope: "near_protocol",
+        details: {
+          blockchain: "NEAR Protocol (Testnet)",
+          patternHash,
+          patternCount: patternData.length || 0,
+          accountId: NEAR_ACCOUNT_ID,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
 
     return new Response(
       JSON.stringify({
