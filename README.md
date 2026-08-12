@@ -13,7 +13,7 @@
 <h3 align="center">Neuro-Inspired Cognitive Architecture for Dream Intelligence</h3>
 
 <p align="center">
-  <em>A dream operating system that models hippocampal memory consolidation, enforces neural data sovereignty, and builds collective intelligence from human dream patterns — without centralized data collection.</em>
+  <em>A dream operating system that models hippocampal memory consolidation, enforces neural data sovereignty, and builds collective intelligence from human dream patterns — without centralized data collection</em>
 </p>
 
 <p align="center">
