@@ -27,7 +27,7 @@
 
 ## 🎯 The Problem
 
-> Current dream journaling apps treat dreams as isolated text entries. They miss a fundamental neuroscience insight: **the brain doesn't store dreams as discrete events — it consolidates them through hippocampal replay, forming associative memory clusters during sleep.**
+> Current dream journaling apps treat dreams as isolated text entries. They miss a fundamental neuroscience insight: **the brain doesn't store dreams as discrete events — it consolidates them through hippocampal replay, forming associative memory clusters during sleep**
 
 Meanwhile, brain-computer interfaces collect intimate cognitive data without meaningful consent frameworks. Users have **no cognitive liberty** — no right to control, export, or delete their own neural data.
 
